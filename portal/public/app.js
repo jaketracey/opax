@@ -5762,7 +5762,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=0bafc6d77a'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=372756b032'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -9354,9 +9354,18 @@ function billStatusTone(status) {
   const s = String(status || "").toLowerCase();
   if (/exposure/.test(s)) return "draft";
   if (/passed|assent/.test(s)) return "done";
-  if (/before|introduced|current/.test(s)) return "active";
+  if (/before|introduced|current|recorded/.test(s)) return "active";
   return "ended";
 }
+/* A bill written from Hansard and division records while the Parliament's bill page is not
+   loaded (scripts/derive_bills_hansard.py). It says so wherever it is shown, in the export's
+   own words, and never borrows the register's name. */
+const RECORDED_BILL_NOTE = "Recorded from Hansard and divisions";
+const billRecorded = (b) => !!b?.record_source;
+const billRecordedLabel = (b) => String(b?.provenance?.label || "").trim()
+  || `${RECORDED_BILL_NOTE}. The Parliament's bill page is not part of this record yet.`;
+/** The day a list files a bill under: its introduction, or for a recorded bill with none, its last recorded day. */
+const billListDate = (b) => String(b?.introduced || (billRecorded(b) ? b.status_as_of : "") || "");
 /** A division's outcome as a StatusLabel: agreed is done, not agreed has ended. */
 function billOutcomeLabelHTML(outcome) {
   const word = billOutcome(outcome) || "Outcome not recorded";
@@ -9379,6 +9388,7 @@ const BILL_SOURCE_NAMES = {
   exposure_draft: "Exposure draft", consultation: "Consultation page",
   em_revised: "Revised explanatory memorandum", em_supp: "Supplementary explanatory memorandum",
   digest: "Bills Digest", frl_act: "The Act on the Federal Register",
+  hansard: "Hansard for the day, as published by OpenAustralia",
 };
 
 function billSourcesHTML(sources) {
@@ -9401,7 +9411,7 @@ const billOriginals = (sources) => (sources || []).filter((s) => safeUrl(s?.url)
 
 /** The head of every bill list row: the name, then what it is and where it got to. */
 function billRowHTML(b) {
-  const year = String(b.introduced || "").slice(0, 4);
+  const year = billListDate(b).slice(0, 4);
   // A private member's bill: the sponsor, with a count of the co-sponsors the
   // bill page names (bills-006/007). Older files carry them in the portfolio.
   const members = billSponsorFromPortfolio(b.portfolio);
@@ -9416,6 +9426,7 @@ function billRowHTML(b) {
     Number(b.divisions) ? `${b.divisions} division record${b.divisions === 1 ? "" : "s"}` : "",
     Number(b.speeches) ? `${b.speeches} speech${b.speeches === 1 ? "" : "es"}` : "",
     Number(b.acts) ? "became law" : "",
+    billRecorded(b) ? RECORDED_BILL_NOTE : "",
   ].filter(Boolean);
   return `<li>
     <a class="source-title bill-row-title" ${entityHrefAttr(billHash(b.key))}>${esc(billName(b))}</a>
@@ -9436,6 +9447,14 @@ const BILLS_FINEPRINT =
    the Bills Digest, are marked as such wherever they appear, and are not the record. A bill missing from
    this list is not evidence it does not exist: the register is still being built. Each division record
    counted here is one division of the house, and the bill's page shows every one of them.`;
+
+/** What the list owes the reader about bills written from Hansard and divisions; "" when there are none. */
+function billsRecordedNote(recorded) {
+  const n = Number(recorded?.count) || 0;
+  if (!n) return "";
+  const to = /^\d{4}-\d{2}-\d{2}/.test(String(recorded.current_to || "")) ? `, current to ${fmtDate(recorded.current_to)}` : "";
+  return `${n} bill${n === 1 ? "" : "s"} marked Recorded in parliament ${n === 1 ? "is" : "are"} written from Hansard and division records${to}. The Parliament's bill page is not part of ${n === 1 ? "this record" : "these records"} yet, so ${n === 1 ? "it has" : "they have"} no sponsor, portfolio, bill text or summary.`;
+}
 
 /** /bills — the whole list, searchable by name, filtered by parliament, status and year. */
 /** APH writes a sponsor as "SMITH, Sen Dean" or "BURKE, the Hon Tony, MP"; readers want "Dean Smith". */
@@ -9498,7 +9517,7 @@ async function openBillsIndex(params, manageFocus) {
   }
   const items = idx.bills.slice();
   for (const b of items) {
-    b._year = String(b.introduced || "").slice(0, 4);
+    b._year = billListDate(b).slice(0, 4);
     b._sortName = foldText(billName(b));
   }
   const years = [...new Set(items.map((b) => b._year).filter(Boolean))].sort().reverse();
@@ -9530,13 +9549,13 @@ async function openBillsIndex(params, manageFocus) {
       { key: "divided", label: "Divided on", check: true, test: (b) => Number(b.divisions) > 0 },
     ],
     sorts: [
-      ["newest", "Newest first", (a, b) => String(b.introduced || "").localeCompare(String(a.introduced || ""))],
-      ["oldest", "Oldest first", (a, b) => String(a.introduced || "").localeCompare(String(b.introduced || ""))],
+      ["newest", "Newest first", (a, b) => billListDate(b).localeCompare(billListDate(a))],
+      ["oldest", "Oldest first", (a, b) => billListDate(a).localeCompare(billListDate(b))],
       ["title", "By name", byName],
       ["divisions", "Most division records", byNumDesc((b) => Number(b.divisions) || 0)],
     ],
     row: billRowHTML,
-    fineprint: BILLS_FINEPRINT,
+    fineprint: [BILLS_FINEPRINT, billsRecordedNote(idx.meta?.hansard_recorded)].filter(Boolean).join(" "),
   });
   const [hubs, helper] = await Promise.all([
     fetch('/hubs/index.json').then(r => r.ok ? r.json() : null).catch(() => null),
@@ -9633,9 +9652,18 @@ const BILL_REGISTER_NOTE =
 function billTimelineHTML(bill) {
   const dates = (bill.key_dates || []).filter((d) => d?.date)
     .slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
-  const sponsorMissing = !bill.sponsor && !billSponsorFromPortfolio(bill.portfolio) && bill.status !== "exposure_draft";
-  const home = billOriginals((bill.sources || []).filter((s) => s.kind === "billhome"));
-  const source = (folded) => sourceLineHTML({
+  const recorded = billRecorded(bill);
+  const sponsorMissing = !recorded && !bill.sponsor && !billSponsorFromPortfolio(bill.portfolio) && bill.status !== "exposure_draft";
+  const home = billOriginals((bill.sources || []).filter((s) => s.kind === (recorded ? "hansard" : "billhome")));
+  const source = (folded) => recorded ? sourceLineHTML({
+    updated: bill.status_as_of || "", dateLabel: "Recorded to", source: "Hansard and division records",
+    originals: home,
+    notes: [
+      billRecordedLabel(bill),
+      bill.provenance?.basis || "",
+      "Each stage is a heading in the day's Hansard, and each stage links the day file it was read from. A stage agreed to without a heading of its own is not listed.",
+    ],
+  }) : sourceLineHTML({
     updated: bill.exportedAt || "", source: "Parliament of Australia",
     originals: home,
     notes: [
@@ -10109,14 +10137,21 @@ async function openBill(key, manageFocus) {
   const house = billHouse(bill.originating_house);
   // One meta line: when and where it began and who brought it. "Sponsor not
   // recorded" is not drawn as a party; it is said once, in How it moved's sheet.
+  // A recorded bill's date says what Hansard holds for that day: a First Reading heading is an
+  // introduction; the mover's second reading motion is said as that, not as "Introduced".
+  const secondReadingMoved = billRecorded(bill) && bill.provenance?.introduced_basis !== "first_reading";
   const began = [
-    bill.introduced ? `${draft ? "Released" : "Introduced"} ${esc(fmtDate(bill.introduced))}` : draft ? "Government exposure draft" : "",
+    bill.introduced ? `${draft ? "Released" : secondReadingMoved ? "Second reading moved" : "Introduced"} ${esc(fmtDate(bill.introduced))}` : draft ? "Government exposure draft" : "",
     sponsorLinks.length ? `by ${sponsorLinks.slice(0, 3).join(", ")}${sponsorLinks.length > 3 ? ` and ${sponsorLinks.length - 3} others` : ""}` : "",
     house && !draft ? `in the ${esc(house)}` : "",
   ].filter(Boolean).join(" ");
+  // A recorded bill with no introduction on the record says where it was first seen instead.
+  const firstSeen = billRecorded(bill) && !bill.introduced && bill.provenance?.first_recorded
+    ? `First recorded ${esc(fmtDate(bill.provenance.first_recorded))}${
+      billHouse(bill.provenance.first_recorded_house) ? ` in the ${esc(billHouse(bill.provenance.first_recorded_house))}` : ""}` : "";
   const metaBits = [
     draft && bill.introduced ? "Government exposure draft, not yet introduced" : "",
-    began,
+    began || firstSeen,
     billParty(bill.sponsor_party) && billParty(bill.sponsor_party) !== "Not recorded" ? partyChipHTML(billParty(bill.sponsor_party)) : "",
     billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
   ].filter(Boolean);
@@ -10139,6 +10174,7 @@ async function openBill(key, manageFocus) {
       ${bill.short_title && bill.short_title !== title
         ? `<p class="ui-page-meta bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}
       ${metaBits.length ? `<p class="ui-page-meta bill-tag">${metaBits.join(" · ")}</p>` : ""}
+      ${billRecorded(bill) ? `<p class="ui-page-meta bill-recorded" data-record-source="${esc(bill.record_source)}">${esc(billRecordedLabel(bill))}</p>` : ""}
       ${billRelatedHTML(bill)}
       ${actions}
     </div>

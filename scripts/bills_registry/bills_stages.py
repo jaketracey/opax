@@ -14,6 +14,7 @@ BILL_STAGE_ORDER = {
     "exposure_draft": -1,
     "before_house": 0,
     "before_parliament": 0,
+    "recorded_in_parliament": 0,  # written from Hansard and divisions; the registry replaces it
     "introduced": 1,
     "first_reading": 1,
     "second_reading": 2,

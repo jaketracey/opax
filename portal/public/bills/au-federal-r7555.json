@@ -1,0 +1,300 @@
+{
+ "key": "au-federal-r7555",
+ "title": "Income Tax Rates Amendment (Minimum Tax on Discretionary Trusts) Bill 2026",
+ "short_title": "Income Tax Rates Amendment (Minimum Tax on Discretionary Trusts) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-10-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "sponsors": [],
+ "portfolio": null,
+ "status": "recorded_in_parliament",
+ "status_as_of": "2026-11-16",
+ "passed_both_houses": null,
+ "passed_both_houses_date": null,
+ "royal_assent": null,
+ "act_number": null,
+ "key_dates": [
+  {
+   "stage": "second_reading",
+   "date": "2026-10-14",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-14.xml"
+  },
+  {
+   "stage": "reference_to_committee",
+   "date": "2026-10-14",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-14.xml"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-10-28",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-28.xml"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "stage": "first_reading",
+   "date": "2026-11-16",
+   "house": "senate",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-11-16",
+   "house": "senate",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "hansard",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-14.xml",
+   "document_date": "2026-10-14",
+   "licence": null
+  },
+  {
+   "kind": "hansard",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml",
+   "document_date": "2026-11-16",
+   "licence": null
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-oa-2026-10-14-1",
+   "date": "2026-10-14",
+   "house": "representatives",
+   "question": "The question is that the motion be agreed to.",
+   "stage": "Bill",
+   "title": "Bill",
+   "ayes": 46,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Unknown": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131,
+    "unknown": 2
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-14.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-10",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is that the bill be now read a third time.",
+   "stage": "Third reading",
+   "title": "Third reading",
+   "ayes": 91,
+   "noes": 45,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 5
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 86,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Unknown": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "unknown": 2
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-9",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is that the bill be read a second time.",
+   "stage": "Second reading",
+   "title": "Second reading",
+   "ayes": 90,
+   "noes": 45,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 5
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 86,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Unknown": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 133,
+    "unknown": 2
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  }
+ ],
+ "speeches": [],
+ "acts": [],
+ "record_source": "hansard_divisions",
+ "provenance": {
+  "label": "Recorded from Hansard and divisions. The Parliament's bill page is not part of this record yet.",
+  "basis": "Hansard as published by OpenAustralia (data.openaustralia.org.au) and OPAX division records. Sponsor, portfolio, bill text and summary are not in these sources.",
+  "bill_id_as_printed": "r7555",
+  "first_recorded": "2026-10-14",
+  "first_recorded_house": "representatives",
+  "introduced_basis": "second_reading_moved",
+  "observations": [
+   {
+    "house": "representatives",
+    "date": "2026-10-14",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-14.8.1",
+    "moved": true
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-14",
+    "stage": "reference_to_committee",
+    "gid": "uk.org.publicwhip/debate/2026-10-14.9.1"
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-28",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-28.36.1"
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-29",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-29.27.1"
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-29",
+    "stage": "third_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-29.29.1"
+   },
+   {
+    "house": "senate",
+    "date": "2026-11-16",
+    "stage": "first_reading",
+    "gid": "uk.org.publicwhip/lords/2026-11-16.182.1"
+   },
+   {
+    "house": "senate",
+    "date": "2026-11-16",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/lords/2026-11-16.183.1",
+    "moved": true
+   }
+  ]
+ }
+}

@@ -209,7 +209,8 @@ def _check_dir(rel_dir: str, pattern: str, ratio: float) -> list[str]:
     return errs
 
 
-BILL_STATUSES = {"before_parliament", "passed", "lapsed", "negatived", "exposure_draft"}
+BILL_STATUSES = {"before_parliament", "passed", "lapsed", "negatived", "exposure_draft", "recorded_in_parliament"}
+RECORDED_STATUS = "recorded_in_parliament"
 BILL_HOUSES = {"representatives", "senate", None}
 _ENTITY = re.compile(r"&(#\d+|#x[0-9a-f]+|[a-z]+);", re.I)
 
@@ -221,6 +222,11 @@ def bill_doc_errors(doc: dict, parties: frozenset | set | None = None) -> list[s
     key, errs = doc.get("key"), []
     if doc.get("status") not in BILL_STATUSES:
         errs.append(f"{key}: status {doc.get('status')!r} is not in the published vocabulary")
+    # A bill written from Hansard and divisions carries its label and nothing those sources do
+    # not state; a registry bill never borrows that status (scripts/derive_bills_hansard.py).
+    if doc.get("record_source") or doc.get("status") == RECORDED_STATUS:
+        from scripts.derive_bills_hansard import record_errors
+        errs.extend(record_errors(doc))
     labels = [("sponsor_party", doc.get("sponsor_party"))] + [
         (f"sponsors[{i}].party", s.get("party")) for i, s in enumerate(doc.get("sponsors") or [])
         if isinstance(s, dict)]
@@ -265,6 +271,22 @@ def check_bills() -> list[str]:
             errs.append(f"index lists {key} but {key}.json is missing")
             if len(errs) > 10:
                 break
+    # Recorded bills are checked every time, changed or not: there are few, and a bad one must
+    # never ride along with a good registry export.
+    for row in rows:
+        if not (row.get("record_source") or row.get("status") == RECORDED_STATUS):
+            continue
+        try:
+            doc = json.loads((BILLS / f"{row['key']}.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError) as e:
+            errs.append(f"{row.get('key')}.json unreadable: {e}")
+            continue
+        if not doc.get("record_source"):
+            errs.append(f"{row['key']}: the index calls it a recorded bill but its file does not")
+        for field in ("title", "status", "status_as_of", "introduced", "originating_house"):
+            if row.get(field) != doc.get(field):
+                errs.append(f"{row['key']}: index {field} differs from the bill file")
+        errs.extend(bill_doc_errors(doc))
     changed = subprocess.run(["git", "status", "--porcelain", "--", "portal/public/bills"], cwd=ROOT,
                              capture_output=True, text=True).stdout.splitlines()
     for line in changed:

@@ -1,0 +1,549 @@
+{
+ "key": "au-federal-r7566",
+ "title": "Treasury Laws Amendment (Tax Reform No. 4) Bill 2026",
+ "short_title": "Treasury Laws Amendment (Tax Reform No. 4) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-10-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "sponsors": [],
+ "portfolio": null,
+ "status": "recorded_in_parliament",
+ "status_as_of": "2026-11-17",
+ "passed_both_houses": null,
+ "passed_both_houses_date": null,
+ "royal_assent": null,
+ "act_number": null,
+ "key_dates": [
+  {
+   "stage": "second_reading",
+   "date": "2026-10-27",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-27.xml"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-10-28",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-28.xml"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "stage": "consideration_in_detail",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "stage": "first_reading",
+   "date": "2026-11-16",
+   "house": "senate",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-11-16",
+   "house": "senate",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml"
+  },
+  {
+   "stage": "reference_to_committee",
+   "date": "2026-11-17",
+   "house": "senate",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-17.xml"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "hansard",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-27.xml",
+   "document_date": "2026-10-27",
+   "licence": null
+  },
+  {
+   "kind": "hansard",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml",
+   "document_date": "2026-11-16",
+   "licence": null
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-oa-2026-10-29-11",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The original question was that this bill be now read a second time. To this, the honourable member for Curtin moved, as an amendment that all words after 'That' be omitted with a view to substituting other words. Subsequent amendments have been moved by honourable members. In accordance with the resolution agreed to on 27 October 2026, I will put the questions immediately. The question is that the amendment moved by the honourable member for Kooyong be agreed to.",
+   "stage": "Second reading",
+   "title": "Second reading",
+   "ayes": 10,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 83
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 94
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-12",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is that the amendment moved by the honourable member for Wentworth be agreed to.",
+   "stage": "Second reading",
+   "title": "Second reading",
+   "ayes": 9,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 83
+    }
+   },
+   "party_coverage": {
+    "dated": 93
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-13",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is that the amendment moved by the honourable member for Curtin be agreed to.",
+   "stage": "Second reading",
+   "title": "Second reading",
+   "ayes": 10,
+   "noes": 82,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 82
+    }
+   },
+   "party_coverage": {
+    "dated": 92
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-14",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is that the bill be read a second time.",
+   "stage": "Second reading",
+   "title": "Second reading",
+   "ayes": 96,
+   "noes": 37,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 88,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Unknown": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 131,
+    "unknown": 2
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-15",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "BILLS - Treasury Laws Amendment (Tax Reform No. 4) Bill 2026; Consideration in Detail",
+   "stage": "Consideration in detail",
+   "title": "Consideration in detail",
+   "ayes": 9,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 81
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 90
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-16",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is the amendment moved by the honourable member for Kooyong be agreed to.",
+   "stage": "Consideration in detail",
+   "title": "Consideration in detail",
+   "ayes": 9,
+   "noes": 70,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 70
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 79
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-17",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is the amendment moved by the honourable member for Kooyong be agreed to.",
+   "stage": "Consideration in detail",
+   "title": "Consideration in detail",
+   "ayes": 96,
+   "noes": 39,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 88,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Unknown": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 133,
+    "unknown": 2
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-18",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is that the bill be now read a third time.",
+   "stage": "Third reading",
+   "title": "Third reading",
+   "ayes": 96,
+   "noes": 38,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 88,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Unknown": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "unknown": 2
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-senate-oa-2026-11-17-10",
+   "date": "2026-11-17",
+   "house": "senate",
+   "question": "The question is business of the Senate notice of motion No. 5 standing in the name of Senator Hume be agreed to.",
+   "stage": "Bill",
+   "title": "Bill",
+   "ayes": 24,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Jacqui Lambie Network": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Unknown": {
+     "ayes": 2,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "unknown": 3
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-17.xml"
+  }
+ ],
+ "speeches": [],
+ "acts": [],
+ "record_source": "hansard_divisions",
+ "provenance": {
+  "label": "Recorded from Hansard and divisions. The Parliament's bill page is not part of this record yet.",
+  "basis": "Hansard as published by OpenAustralia (data.openaustralia.org.au) and OPAX division records. Sponsor, portfolio, bill text and summary are not in these sources.",
+  "bill_id_as_printed": "r7566",
+  "first_recorded": "2026-10-27",
+  "first_recorded_house": "representatives",
+  "introduced_basis": "second_reading_moved",
+  "observations": [
+   {
+    "house": "representatives",
+    "date": "2026-10-27",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-27.12.2",
+    "moved": true
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-28",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-28.36.1"
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-29",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-29.31.1"
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-29",
+    "stage": "consideration_in_detail",
+    "gid": "uk.org.publicwhip/debate/2026-10-29.39.1"
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-29",
+    "stage": "third_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-29.52.1"
+   },
+   {
+    "house": "senate",
+    "date": "2026-11-16",
+    "stage": "first_reading",
+    "gid": "uk.org.publicwhip/lords/2026-11-16.184.1"
+   },
+   {
+    "house": "senate",
+    "date": "2026-11-16",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/lords/2026-11-16.185.1",
+    "moved": true
+   },
+   {
+    "house": "senate",
+    "date": "2026-11-17",
+    "stage": "reference_to_committee",
+    "gid": "uk.org.publicwhip/lords/2026-11-17.143.2"
+   }
+  ]
+ }
+}

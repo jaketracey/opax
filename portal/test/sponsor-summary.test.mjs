@@ -113,10 +113,13 @@ test('all bill sponsor links retain the fixture census before and after the fix'
   const before = counts(), after = counts();
   const billFiles = (await readdir(new URL('bills/', publicRoot))).filter(f => f.endsWith('.json') && f !== 'index.json');
   const rows = new Map(index.bills.map(bill => [bill.key, bill]));
-  let recorded = 0;
+  let recorded = 0, fromHansard = 0;
   for (const file of billFiles) {
     const bill = await read('bills/' + file);
     assert.equal(rows.get(bill.key).sponsor_person_id, bill.sponsor_person_id, `${bill.key}: index pid`);
+    // A bill written from Hansard and divisions never carries a sponsor (scripts/derive_bills_hansard.py),
+    // so it sits outside the register census this fixture counts.
+    if (bill.record_source) { assert.equal(bill.sponsor, null, `${bill.key}: a recorded bill has no sponsor`); fromHansard++; continue; }
     if (!bill.sponsor) continue;
     recorded++;
     const person = sponsorPerson(bill.sponsor, bill.sponsor_person_id, people);
@@ -145,10 +148,11 @@ test('all bill sponsor links retain the fixture census before and after the fix'
       before.unlinked++; before.reasons['missing-summary']++;
     }
   }
-  assert.equal(billFiles.length, fixture.totalBills);
-  assert.equal(index.bills.length, fixture.totalBills);
+  assert.equal(billFiles.length - fromHansard, fixture.totalBills);
+  assert.equal(index.bills.filter(bill => !bill.record_source).length, fixture.totalBills);
+  assert.equal(index.bills.filter(bill => bill.record_source).length, fromHansard);
   assert.equal(recorded, fixture.recordedSponsors);
-  assert.equal(billFiles.length - recorded, fixture.withoutRecordedSponsor);
+  assert.equal(billFiles.length - fromHansard - recorded, fixture.withoutRecordedSponsor);
   assert.deepEqual(before, fixture.before);
   assert.deepEqual(after, fixture.after);
 });

@@ -44,9 +44,13 @@ assert.ok(index.meta.party_basis, "index states its party basis");
 const LIFECYCLE_KEYS = ["passed_both_houses", "passed_both_houses_date", "royal_assent", "act_number"];
 // `ended` and `ended_label` (how a dead bill ended) are written only for bills that did not pass.
 const ENDED_KEYS = ["ended", "ended_label"];
-const OPTIONAL_INDEX_KEYS = [...LIFECYCLE_KEYS, "sponsor_count", ...ENDED_KEYS];
-const OPTIONAL_BILL_KEYS = [...LIFECYCLE_KEYS, "sponsors", ...ENDED_KEYS];
-const STATUSES = new Set(["before_parliament", "passed", "lapsed", "negatived", "exposure_draft"]);
+// `record_source` marks a bill written from Hansard and divisions (scripts/derive_bills_hansard.py);
+// its file also carries `provenance`. A registry bill has neither.
+const OPTIONAL_INDEX_KEYS = [...LIFECYCLE_KEYS, "sponsor_count", ...ENDED_KEYS, "record_source"];
+const OPTIONAL_BILL_KEYS = [...LIFECYCLE_KEYS, "sponsors", ...ENDED_KEYS, "record_source", "provenance"];
+const STATUSES = new Set(["before_parliament", "passed", "lapsed", "negatived", "exposure_draft", "recorded_in_parliament"]);
+// The recorded status and the recorded mark travel together: neither is ever on a registry bill.
+for (const row of index.bills) assert.equal(row.status === "recorded_in_parliament", Object.hasOwn(row, "record_source"), `${row.key} recorded status and record_source`);
 const optional = (obj, keys) => keys.filter((k) => Object.hasOwn(obj, k));
 
 for (const row of index.bills) {

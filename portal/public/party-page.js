@@ -371,7 +371,7 @@ export function partyBills(label, divisions, same = (a, b) => identity(a) === id
 }
 
 // The bill rows' words (home-data.js billRowHTML).
-const BILL_STATUS = {before_parliament: 'Before parliament', passed: 'Passed', lapsed: 'Lapsed', exposure_draft: 'Exposure draft'};
+const BILL_STATUS = {before_parliament: 'Before parliament', passed: 'Passed', lapsed: 'Lapsed', exposure_draft: 'Exposure draft', recorded_in_parliament: 'Recorded in parliament'};
 /** The "Bills sponsored" block: each bill linked to its page, with its introduction date and status. */
 export function partyBillsHTML(label, bills, h, {updated = ''} = {}) {
   if (!bills?.length) return '';

@@ -710,6 +710,19 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "$DIVISIONS_ACQUISITION_FAILE
   fi
 fi
 
+# ---- 3c. bills recorded in Hansard and divisions that the registry does not hold yet -----------------
+# After the registry export, the division pages and their reconciled tallies, every night (paused or not).
+# Reads the Hansard XML the divisions refresh staged and the published division records; fetches nothing.
+# An unreadable day file or a record that breaks a rule is HELD and the rest go on; the script falls back to
+# the published records alone before it gives up. A registry export writes the index without the recorded
+# bills (bills_guard.py allows that only because this step puts them back), so if this step fails the whole
+# bills group goes back to HEAD: no recorded bill is dropped, no file is left outside the index, and the
+# export is retried on the next run. validate_data.py bills checks each recorded bill.
+if ! run "$PY" scripts/derive_bills_hansard.py --stage "${OPAX_OA_STAGE:-$HOME/.cache/autoresearch/oa-feed}"; then
+  fail "bills recorded from Hansard and divisions could not be rebuilt; bills reverted to HEAD so none is dropped"
+  revert portal/public/bills
+fi
+
 divisions_verify
 
 # ---- 3c. promote separately reviewed hub snapshots after the existing exports ------------------
