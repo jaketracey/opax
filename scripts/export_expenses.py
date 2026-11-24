@@ -21,7 +21,10 @@ Output:
                         "top": [{"date": "Apr-Jun 2025", "category": "Domestic Travel",
                                  "description": "Aggregated Total", "amount": 1178514}, ...]}}}
 
-`people` is keyed by members.person_id. `names` maps lowercased display names
+`people` is keyed by members.person_id, digits only. A reviewed provisional id
+('aph_25813', scripts/member_ids.py) files under the person's OpenAustralia id; a
+person on any other non-numeric id is held out with a printed HELD line, because
+every shipped app refuses the whole map for one such key. `names` maps lowercased display names
 (members.full_name plus every cleaned IPEA name variant) to a person_id so the
 portal can resolve people who have no portrait entry in photos/people.json;
 a name shared by two people with expenses is left out rather than guessed.
@@ -71,6 +74,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from parli.ingest.money_ipea import LICENCE, LICENCE_URL  # noqa: E402
+from scripts import member_ids  # noqa: E402
 
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 TOP_ITEMS = 5
@@ -102,6 +106,21 @@ NICKNAMES = {
     "peter": ["pete"], "kenneth": ["ken"], "ronald": ["ron"], "raymond": ["ray"],
 }
 ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}")
+# The id every shipped app accepts for an expenses person (mobile legacyPersonId): digits only.
+APP_PERSON_ID = re.compile(r"\d+")
+
+
+def hold_unreadable_ids(people, names):
+    """(people, names, held) with every person whose id is not all digits left out.
+
+    Shipped apps decode `people` as a map keyed by a numeric person id and refuse the whole
+    map for one other key (23 Nov 2026: a new member still on a provisional `aph_` roster id
+    took expenses away from every app build). Such a person is held, with their name rows,
+    until the roster gives them a numeric id; nothing else about the export changes."""
+    held = {pid: p for pid, p in people.items() if not APP_PERSON_ID.fullmatch(str(pid))}
+    kept_people = {pid: p for pid, p in people.items() if pid not in held}
+    kept_names = {name: pid for name, pid in names.items() if APP_PERSON_ID.fullmatch(str(pid))}
+    return kept_people, kept_names, held
 
 
 def clean_name(member_name):
@@ -119,6 +138,7 @@ def display_name(key):
 
 def main():
     db = sqlite3.connect(DB, uri=True)
+    id_corrections = member_ids.corrections.load(member_ids.DATASET)
 
     # members.full_name -> preferred person_id (sitting member first, then most
     # recently departed), mirroring the loader's LINK_SQL tie-break.
@@ -128,6 +148,8 @@ def main():
         if not pid or not name:
             continue
         full_name[pid] = name.strip()
+        # A reviewed provisional id ('aph_25813') is the same person as its OpenAustralia id ('11065').
+        full_name.setdefault(member_ids.canonical(pid, id_corrections), name.strip())
         candidates[name.strip().lower()].append((left is None, left or "", pid))
     preferred = {k: max(v)[2] for k, v in candidates.items()}
 
@@ -174,6 +196,9 @@ def main():
         if not pid:
             unresolved[member_name] += amount
             continue
+        # File a reviewed provisional id under the person's OpenAustralia id, as the roster and the
+        # interests register do (scripts/member_ids.py): the apps read only all-digit ids.
+        pid = str(member_ids.canonical(pid, id_corrections))
         p = people.get(pid)
         if p is None:
             p = people[pid] = {"total": 0.0, "lines": 0, "cats": defaultdict(float),
@@ -227,6 +252,12 @@ def main():
         for v in variants[pid]:
             name_hits[v].add(pid)
     names = {k: next(iter(v)) for k, v in sorted(name_hits.items()) if len(v) == 1}
+
+    out_people, names, held = hold_unreadable_ids(out_people, names)
+    if held:
+        print(f"HELD {len(held)} people without an all-digit person id, left out of expenses.json "
+              f"(${sum(p['total'] for p in held.values()):,} in total): "
+              + ", ".join(f"{pid} {p['name']}" for pid, p in sorted(held.items())), file=sys.stderr)
 
     latest = max(periods)
     (latest_url,) = db.execute(
