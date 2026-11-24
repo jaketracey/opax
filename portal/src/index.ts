@@ -5163,7 +5163,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
   // Divided bills keep both vote counts within the description's length budget.
   const tail = counts.length ? (detail?.divisions?.length ? recordLine : `${andList(counts)}: who argued for and against it.`)
     : b.status === 'exposure_draft' ? 'The draft, its consultation and what it would change.'
-    : b.record_source ? 'Recorded from Hansard and divisions. The Parliament\'s bill page is not yet loaded.'
+    : b.record_source ? 'Recorded from Hansard and divisions. The Parliament\'s bill page is not part of this record yet.'
     : 'Its progress, the bill text and every speech on it as the debate starts.'
   const portfolio = b.portfolio ? ` ${b.portfolio} portfolio.` : ''
   const facts = `${name}. ${opening}${portfolio}`.trim()

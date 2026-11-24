@@ -305,7 +305,7 @@
  "acts": [],
  "record_source": "hansard_divisions",
  "provenance": {
-  "label": "Recorded from Hansard and divisions. The Parliament's bill page is not yet loaded.",
+  "label": "Recorded from Hansard and divisions. The Parliament's bill page is not part of this record yet.",
   "basis": "Hansard as published by OpenAustralia (data.openaustralia.org.au) and OPAX division records. Sponsor, portfolio, bill text and summary are not in these sources.",
   "bill_id_as_printed": "r7568",
   "first_recorded": "2026-10-27",

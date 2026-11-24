@@ -51,7 +51,7 @@ import export_bills as eb  # noqa: E402
 
 RECORD_SOURCE = "hansard_divisions"
 STATUS = "recorded_in_parliament"
-LABEL = "Recorded from Hansard and divisions. The Parliament's bill page is not yet loaded."
+LABEL = "Recorded from Hansard and divisions. The Parliament's bill page is not part of this record yet."
 BASIS = ("Hansard as published by OpenAustralia (data.openaustralia.org.au) and OPAX division records. "
          "Sponsor, portfolio, bill text and summary are not in these sources.")
 SOURCE_BASE = "https://data.openaustralia.org.au/scrapedxml"

@@ -8,7 +8,7 @@ import {billRowHTML, billsSourceHTML, recordedBillsNote, newestBillsFile, RECORD
 // borrows the register's statuses or its source line.
 const pub = new URL('../public/', import.meta.url);
 const read = path => JSON.parse(readFileSync(new URL(path, pub), 'utf8'));
-const LABEL = "Recorded from Hansard and divisions. The Parliament's bill page is not yet loaded.";
+const LABEL = "Recorded from Hansard and divisions. The Parliament's bill page is not part of this record yet.";
 const recorded = {key: 'au-federal-r7601', title: 'New Things Bill 2026', status: 'recorded_in_parliament',
   introduced: '2026-10-27', jurisdiction: 'federal', portfolio: null, record_source: 'hansard_divisions'};
 
@@ -25,8 +25,8 @@ test('recorded bills: the list note counts them, dates them and says what they l
   assert.equal(recordedBillsNote(null), '');
   assert.equal(recordedBillsNote({count: 0}), '');
   assert.equal(recordedBillsNote({count: 32, current_to: '2026-11-23'}),
-    "32 bills marked Recorded in parliament are written from Hansard and division records, current to 23 Nov 2026. The Parliament's bill page is not yet loaded for them, so they have no sponsor, portfolio, bill text or summary.");
-  assert.match(recordedBillsNote({count: 1}), /^1 bill marked Recorded in parliament is written .* for it, so it has no sponsor/);
+    "32 bills marked Recorded in parliament are written from Hansard and division records, current to 23 Nov 2026. The Parliament's bill page is not part of these records yet, so they have no sponsor, portfolio, bill text or summary.");
+  assert.match(recordedBillsNote({count: 1}), /^1 bill marked Recorded in parliament is written .* not part of this record yet, so it has no sponsor/);
   for (const text of [recordedBillsNote({count: 2, current_to: '2026-11-23'}), RECORDED_BILL_NOTE, LABEL]) assert.doesNotMatch(text, /[–—]/);
 });
 

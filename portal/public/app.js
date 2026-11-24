@@ -9363,7 +9363,7 @@ function billStatusTone(status) {
 const RECORDED_BILL_NOTE = "Recorded from Hansard and divisions";
 const billRecorded = (b) => !!b?.record_source;
 const billRecordedLabel = (b) => String(b?.provenance?.label || "").trim()
-  || `${RECORDED_BILL_NOTE}. The Parliament's bill page is not yet loaded.`;
+  || `${RECORDED_BILL_NOTE}. The Parliament's bill page is not part of this record yet.`;
 /** The day a list files a bill under: its introduction, or for a recorded bill with none, its last recorded day. */
 const billListDate = (b) => String(b?.introduced || (billRecorded(b) ? b.status_as_of : "") || "");
 /** A division's outcome as a StatusLabel: agreed is done, not agreed has ended. */
@@ -9453,7 +9453,7 @@ function billsRecordedNote(recorded) {
   const n = Number(recorded?.count) || 0;
   if (!n) return "";
   const to = /^\d{4}-\d{2}-\d{2}/.test(String(recorded.current_to || "")) ? `, current to ${fmtDate(recorded.current_to)}` : "";
-  return `${n} bill${n === 1 ? "" : "s"} marked Recorded in parliament ${n === 1 ? "is" : "are"} written from Hansard and division records${to}. The Parliament's bill page is not yet loaded for ${n === 1 ? "it" : "them"}, so ${n === 1 ? "it has" : "they have"} no sponsor, portfolio, bill text or summary.`;
+  return `${n} bill${n === 1 ? "" : "s"} marked Recorded in parliament ${n === 1 ? "is" : "are"} written from Hansard and division records${to}. The Parliament's bill page is not part of ${n === 1 ? "this record" : "these records"} yet, so ${n === 1 ? "it has" : "they have"} no sponsor, portfolio, bill text or summary.`;
 }
 
 /** /bills — the whole list, searchable by name, filtered by parliament, status and year. */

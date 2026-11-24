@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-24T06:17:15+00:00",
+ "generated_at": "2026-11-24T07:49:52+00:00",
  "count": 3021,
  "meta": {
   "mode": "registry",
@@ -17,7 +17,7 @@
   "hansard_recorded": {
    "count": 32,
    "current_to": "2026-11-23",
-   "label": "Recorded from Hansard and divisions. The Parliament's bill page is not yet loaded.",
+   "label": "Recorded from Hansard and divisions. The Parliament's bill page is not part of this record yet.",
    "basis": "Hansard as published by OpenAustralia (data.openaustralia.org.au) and OPAX division records. Sponsor, portfolio, bill text and summary are not in these sources."
   }
  },

@@ -245,7 +245,7 @@ export function recordedBillsNote(recorded) {
   const n = Number(recorded?.count) || 0;
   if (!n) return '';
   const to = /^\d{4}-\d{2}-\d{2}/.test(String(recorded.current_to || '')) ? `, current to ${date(recorded.current_to)}` : '';
-  return `${n} bill${n === 1 ? '' : 's'} marked Recorded in parliament ${n === 1 ? 'is' : 'are'} written from Hansard and division records${to}. The Parliament's bill page is not yet loaded for ${n === 1 ? 'it' : 'them'}, so ${n === 1 ? 'it has' : 'they have'} no sponsor, portfolio, bill text or summary.`;
+  return `${n} bill${n === 1 ? '' : 's'} marked Recorded in parliament ${n === 1 ? 'is' : 'are'} written from Hansard and division records${to}. The Parliament's bill page is not part of ${n === 1 ? 'this record' : 'these records'} yet, so ${n === 1 ? 'it has' : 'they have'} no sponsor, portfolio, bill text or summary.`;
 }
 export function billsSourceHTML(index, refresh = null) {
   const freshness = sourceFreshness(refresh, ['bills']);

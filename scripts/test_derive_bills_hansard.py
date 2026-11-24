@@ -245,7 +245,7 @@ class Provenance(WithSite):
         self.assertEqual(doc["record_source"], "hansard_divisions")
         self.assertEqual(row["status"], "recorded_in_parliament")
         self.assertEqual(doc["provenance"]["label"],
-                         "Recorded from Hansard and divisions. The Parliament's bill page is not yet loaded.")
+                         "Recorded from Hansard and divisions. The Parliament's bill page is not part of this record yet.")
         self.assertEqual(self.site.index()["meta"]["hansard_recorded"]["label"], doc["provenance"]["label"])
         self.assertEqual(doc["provenance"]["bill_id_as_printed"], "r7601")
         self.assertEqual({s["kind"] for s in doc["sources"]}, {"hansard"})
