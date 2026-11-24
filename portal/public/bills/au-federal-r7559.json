@@ -1,0 +1,353 @@
+{
+ "key": "au-federal-r7559",
+ "title": "Domestic Gas Reservation Bill 2026",
+ "short_title": "Domestic Gas Reservation Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-10-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "sponsors": [],
+ "portfolio": null,
+ "status": "recorded_in_parliament",
+ "status_as_of": "2026-11-16",
+ "passed_both_houses": null,
+ "passed_both_houses_date": null,
+ "royal_assent": null,
+ "act_number": null,
+ "key_dates": [
+  {
+   "stage": "second_reading",
+   "date": "2026-10-14",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-14.xml"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-10-27",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-27.xml"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-10-28",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-28.xml"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "stage": "consideration_in_detail",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "stage": "report_from_federation_chamber",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "stage": "first_reading",
+   "date": "2026-11-16",
+   "house": "senate",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-11-16",
+   "house": "senate",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "hansard",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-14.xml",
+   "document_date": "2026-10-14",
+   "licence": null
+  },
+  {
+   "kind": "hansard",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml",
+   "document_date": "2026-11-16",
+   "licence": null
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-oa-2026-10-29-19",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is that the amendment moved by the honourable member for Kennedy to the amendment to the second reading motion moved by the honourable member for Warringah be agreed to.",
+   "stage": "Bill",
+   "title": "Bill",
+   "ayes": 10,
+   "noes": 85,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 84
+    }
+   },
+   "party_coverage": {
+    "dated": 95
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-20",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "BILLS - Domestic Gas Reservation Bill 2026; Second Reading",
+   "stage": "Second reading",
+   "title": "Second reading",
+   "ayes": 7,
+   "noes": 113,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 81
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 120
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-21",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is that the amendments moved by the honourable member for Ryan be agreed to.",
+   "stage": "Consideration in detail",
+   "title": "Consideration in detail",
+   "ayes": 7,
+   "noes": 69,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 69
+    }
+   },
+   "party_coverage": {
+    "dated": 76
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-22",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is that the amendment moved by the honourable member for Curtin be agreed to.",
+   "stage": "Consideration in detail",
+   "title": "Consideration in detail",
+   "ayes": 7,
+   "noes": 70,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 69
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  },
+  {
+   "key": "federal-representatives-oa-2026-10-29-23",
+   "date": "2026-10-29",
+   "house": "representatives",
+   "question": "The question is the amendment moved by the honourable member for Mackellar be agreed to.",
+   "stage": "Consideration in detail",
+   "title": "Consideration in detail",
+   "ayes": 8,
+   "noes": 101,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 109
+   },
+   "paired": 0,
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-10-29.xml"
+  }
+ ],
+ "speeches": [],
+ "acts": [],
+ "record_source": "hansard_divisions",
+ "provenance": {
+  "label": "Recorded from Hansard and divisions. The Parliament's bill page is not yet loaded.",
+  "basis": "Hansard as published by OpenAustralia (data.openaustralia.org.au) and OPAX division records. Sponsor, portfolio, bill text and summary are not in these sources.",
+  "bill_id_as_printed": "r7559",
+  "first_recorded": "2026-10-14",
+  "first_recorded_house": "representatives",
+  "introduced_basis": "second_reading_moved",
+  "observations": [
+   {
+    "house": "representatives",
+    "date": "2026-10-14",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-14.4.2",
+    "moved": true
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-27",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-27.14.1"
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-28",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-28.164.2"
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-29",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-29.56.1"
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-29",
+    "stage": "consideration_in_detail",
+    "gid": "uk.org.publicwhip/debate/2026-10-29.59.1"
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-29",
+    "stage": "third_reading",
+    "gid": "uk.org.publicwhip/debate/2026-10-29.74.1"
+   },
+   {
+    "house": "representatives",
+    "date": "2026-10-29",
+    "stage": "report_from_federation_chamber",
+    "gid": "uk.org.publicwhip/debate/2026-10-29.54.1"
+   },
+   {
+    "house": "senate",
+    "date": "2026-11-16",
+    "stage": "first_reading",
+    "gid": "uk.org.publicwhip/lords/2026-11-16.180.2"
+   },
+   {
+    "house": "senate",
+    "date": "2026-11-16",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/lords/2026-11-16.181.1",
+    "moved": true
+   }
+  ]
+ }
+}

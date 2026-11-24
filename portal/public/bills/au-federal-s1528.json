@@ -1,0 +1,71 @@
+{
+ "key": "au-federal-s1528",
+ "title": "Fair Work and Other Legislation Amendment (Value for Taxpayers' Money) Bill 2026",
+ "short_title": "Fair Work and Other Legislation Amendment (Value for Taxpayers' Money) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-11-16",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "sponsors": [],
+ "portfolio": null,
+ "status": "recorded_in_parliament",
+ "status_as_of": "2026-11-16",
+ "passed_both_houses": null,
+ "passed_both_houses_date": null,
+ "royal_assent": null,
+ "act_number": null,
+ "key_dates": [
+  {
+   "stage": "first_reading",
+   "date": "2026-11-16",
+   "house": "senate",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-11-16",
+   "house": "senate",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "hansard",
+   "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2026-11-16.xml",
+   "document_date": "2026-11-16",
+   "licence": null
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": [],
+ "record_source": "hansard_divisions",
+ "provenance": {
+  "label": "Recorded from Hansard and divisions. The Parliament's bill page is not yet loaded.",
+  "basis": "Hansard as published by OpenAustralia (data.openaustralia.org.au) and OPAX division records. Sponsor, portfolio, bill text and summary are not in these sources.",
+  "bill_id_as_printed": "s1528",
+  "first_recorded": "2026-11-16",
+  "first_recorded_house": "senate",
+  "introduced_basis": "first_reading",
+  "observations": [
+   {
+    "house": "senate",
+    "date": "2026-11-16",
+    "stage": "first_reading",
+    "gid": "uk.org.publicwhip/lords/2026-11-16.146.1"
+   },
+   {
+    "house": "senate",
+    "date": "2026-11-16",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/lords/2026-11-16.147.1",
+    "moved": true
+   }
+  ]
+ }
+}

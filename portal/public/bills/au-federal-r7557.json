@@ -1,0 +1,59 @@
+{
+ "key": "au-federal-r7557",
+ "title": "Housing Australia (Prioritising Australian Citizens) Bill 2026",
+ "short_title": "Housing Australia (Prioritising Australian Citizens) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-11-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "sponsors": [],
+ "portfolio": null,
+ "status": "recorded_in_parliament",
+ "status_as_of": "2026-11-23",
+ "passed_both_houses": null,
+ "passed_both_houses_date": null,
+ "royal_assent": null,
+ "act_number": null,
+ "key_dates": [
+  {
+   "stage": "second_reading",
+   "date": "2026-11-23",
+   "house": "representatives",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-11-23.xml"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "hansard",
+   "url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2026-11-23.xml",
+   "document_date": "2026-11-23",
+   "licence": null
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": [],
+ "record_source": "hansard_divisions",
+ "provenance": {
+  "label": "Recorded from Hansard and divisions. The Parliament's bill page is not yet loaded.",
+  "basis": "Hansard as published by OpenAustralia (data.openaustralia.org.au) and OPAX division records. Sponsor, portfolio, bill text and summary are not in these sources.",
+  "bill_id_as_printed": "r7557",
+  "first_recorded": "2026-11-23",
+  "first_recorded_house": "representatives",
+  "introduced_basis": "second_reading_moved",
+  "observations": [
+   {
+    "house": "representatives",
+    "date": "2026-11-23",
+    "stage": "second_reading",
+    "gid": "uk.org.publicwhip/debate/2026-11-23.10.2",
+    "moved": true
+   }
+  ]
+ }
+}
