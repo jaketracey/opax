@@ -156,11 +156,11 @@
       "category": "procurement_concentration",
       "entity": "SECURE JOURNEYS PTY LTD",
       "title": "Department of Home Affairs: 38% awarded to one supplier",
-      "summary": "SECURE JOURNEYS PTY LTD accounts for 37.7% of the positive recorded contract value for Department of Home Affairs.",
+      "summary": "SECURE JOURNEYS PTY LTD accounts for 37.6% of the positive recorded contract value for Department of Home Affairs.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 37.65,
+          "value": 37.6,
           "format": "percent"
         },
         {
@@ -170,7 +170,7 @@
         },
         {
           "label": "Total recorded value",
-          "value": 6222471885.2,
+          "value": 6231889975.71,
           "format": "currency"
         },
         {
@@ -180,7 +180,7 @@
         },
         {
           "label": "Records in comparison",
-          "value": 944.0,
+          "value": 946.0,
           "format": "number"
         }
       ],
@@ -200,22 +200,22 @@
       "chart": {
         "type": "concentration",
         "group_label": "Department of Home Affairs",
-        "group_total": 6222471885.2,
+        "group_total": 6231889975.71,
         "leading_name": "SECURE JOURNEYS PTY LTD",
         "participant_label": "supplier",
         "participant_count": 539,
-        "record_count": 944,
+        "record_count": 946,
         "participants": [
           {
             "name": "SECURE JOURNEYS PTY LTD",
             "value": 2343038544.0,
-            "share": 37.65,
+            "share": 37.6,
             "record_count": 1
           },
           {
             "name": "CUSHMAN & WAKEFIELD PTY LTD",
             "value": 1019223563.3,
-            "share": 16.38,
+            "share": 16.35,
             "record_count": 3
           },
           {
@@ -227,23 +227,23 @@
           {
             "name": "IBM AUSTRALIA LTD",
             "value": 200221225.31,
-            "share": 3.22,
+            "share": 3.21,
             "record_count": 15
           },
           {
             "name": "SKYTRADERS PTY LTD",
             "value": 190795803.32,
-            "share": 3.07,
+            "share": 3.06,
             "record_count": 1
           }
         ],
-        "other_total": 2257615707.36,
-        "other_share": 36.28,
+        "other_total": 2267033797.87,
+        "other_share": 36.38,
         "other_count": 534,
         "period": {
           "kind": "contract_start_date",
           "from": "2009-12-23",
-          "to": "2026-10-31",
+          "to": "2026-11-30",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -4554,7 +4554,7 @@
   ],
   "coverage": {
     "donations": 92642,
-    "contracts": 19762,
+    "contracts": 19770,
     "available_categories": [
       "donor_contract_overlap",
       "recipient_concentration",
@@ -4562,7 +4562,7 @@
     ],
     "unavailable_categories": [],
     "source_donation_rows": 199233,
-    "source_contract_rows": 19762,
+    "source_contract_rows": 19770,
     "eligible_annual_party_receipt_rows": 100482,
     "excluded_before_name_checks": 98751,
     "excluded_receipt_rows": {
@@ -4574,7 +4574,7 @@
     "financial_year_from": "1998-99",
     "financial_year_to": "2024-25",
     "receipt_scope": "AEC annual returns to canonical parties, direct classification only",
-    "snapshot_at": "2026-11-23T16:42:34.937284+00:00"
+    "snapshot_at": "2026-11-24T19:54:44.518763+00:00"
   },
   "methodology": [
     "This snapshot uses annual AEC party-receipt records with a canonical party recipient and ingestion classification direct. These are disclosed receipts, not a verified gifts-only dataset.",
@@ -4588,6 +4588,6 @@
     "Source links open the official source register, not an individual receipt or notice. Evidence labels carry original reported names and row amounts, and contract labels the AusTender CN ID; each is one example behind the aggregate.",
     "Reporting thresholds, incomplete coverage and duplicated/amended disclosures can affect totals. Absence of a signal is not evidence of absence."
   ],
-  "generated_at": "2026-11-23T16:42:34.937284+00:00",
-  "export_seconds": 3.695
+  "generated_at": "2026-11-24T19:54:44.518763+00:00",
+  "export_seconds": 3.726
 }
