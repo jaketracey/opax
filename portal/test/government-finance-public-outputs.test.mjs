@@ -75,7 +75,8 @@ test('SSR cards, table amounts and hydration use original cells even where diagn
    const source=originals.get(row.source_locator);assert.ok(source,row.source_locator);
    assert.equal(row.value_million,source.value);assert.equal(row.amount,source.value===null?null:source.value*1e6);
   }
-  for(const link of doc.querySelectorAll('article dl a[title]')){
+  const links=doc.querySelectorAll('[data-gfs-group] a[title]');assert.ok(links.length>0);
+  for(const link of links){
    const source=originals.get(link.title);assert.ok(source,link.title);
    assert.equal(link.textContent,source.value===null?'Not published':formatCell(source.value*1e6,{key:'amount',label:'Amount',type:'money'}));
   }

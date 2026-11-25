@@ -1,34 +1,132 @@
+/* /register/government-finance (src/government-finance.ts). The page reads
+   top down: a lede and the selectors, the selected group's year in plain words
+   with its figures and ten-year charts, the jurisdictions side by side, what
+   the expenses went on, then the full tables, the terms and the source. Shared
+   pieces come from style.css (ui-section, ui-table, ui-bar, ui-card) and
+   ui-controls.css (ui-filter-bar); this file owns layout and the charts. */
 #prerender:has(+ .gfs-content){padding-bottom:var(--space-row)}
 #prerender:has(+ .gfs-content)>p:last-child{margin-bottom:0}
-.gfs-content{padding-block:var(--space-row);color:var(--ink)}
-.gfs-content>p,.gfs-content section>p{max-width:76ch}
-.gfs-lede{font:var(--type-body);line-height:1.65;margin-top:0}
-.gfs-content section{margin-block:var(--space-section)}
-.gfs-content h2{font:var(--type-heading);margin-block:var(--space-group)}
-.gfs-filters{display:flex;flex-wrap:wrap;align-items:end;gap:var(--space-row);padding:var(--space-group);background:var(--money-wash);margin-block:var(--space-group)}
-.gfs-filters label{display:grid;gap:var(--space-tight);font:var(--type-label);min-width:0;flex:1 1 12rem}
-.gfs-filters select{min-width:0;width:100%;padding:var(--space-row);background:var(--paper-raised);color:var(--ink);border:1px solid var(--line-control);border-radius:var(--radius-sm);font:var(--type-body)}
-.gfs-filters button{background:var(--navy);color:var(--on-navy);border:0;padding:var(--space-row);font:var(--type-label);cursor:pointer}
-.gfs-filters :focus-visible,.gfs-content summary:focus-visible{outline:2px solid var(--bronze-ink);outline-offset:3px}
-.gfs-jurisdictions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:var(--space-group)}
-.gfs-jurisdiction{border-top:2px solid var(--money-ink);padding-top:var(--space-row);min-width:0}
-.gfs-jurisdiction h3{font:var(--type-heading);margin:var(--space-row) 0}
-.gfs-jurisdiction dl{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-row);margin-block:var(--space-group)}
-.gfs-jurisdiction dt{font:var(--type-fine);color:var(--ink-soft)}
-.gfs-jurisdiction dd{margin:var(--space-tight) 0 0;font:var(--type-heading);font-variant-numeric:tabular-nums}
-.gfs-receipt,.gfs-jurisdiction details{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere}
-.gfs-jurisdiction details p{margin-block:var(--space-row)}
-.gfs-jurisdiction summary{cursor:pointer;min-height:2.75rem;display:flex;align-items:center;text-decoration:underline}
-.gfs-function-jurisdiction{border-top:var(--border-accent-mark-height) solid var(--money-ink);padding-top:var(--space-row);min-width:0}
-.gfs-function-jurisdiction h3{font:var(--type-heading);margin-block:var(--space-row)}
-.gfs-function-jurisdiction dl{margin-block:var(--space-group)}
-.gfs-function-jurisdiction dl > div{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:var(--space-row);padding-block:var(--space-tight);font:var(--type-body)}
-.gfs-function-jurisdiction dt{overflow-wrap:anywhere}
-.gfs-function-jurisdiction dd{margin:0;font-variant-numeric:tabular-nums;white-space:nowrap}
-.gfs-function-total{border-top:var(--border-hairline) solid var(--line-control);font:var(--type-strong)}
-.gfs-function-jurisdiction details{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere}
-.gfs-function-jurisdiction summary{cursor:pointer;min-height:var(--size-target);display:flex;align-items:center;text-decoration:underline}
-@media(max-width:600px){.gfs-filters{padding:var(--space-row)}.gfs-filters label,.gfs-filters button{flex-basis:100%}}
+.gfs-content{padding-block:var(--space-row) var(--space-section);color:var(--ink)}
+.gfs-content p{max-width:var(--size-readable)}
+.gfs-lede{margin:0;font:var(--type-body);color:var(--ink)}
+.gfs-note{margin:0 0 var(--space-heading);font:var(--type-metadata);color:var(--ink-soft)}
+.gfs-content a{text-decoration-color:var(--bronze-rule);text-underline-offset:.18em;text-decoration-thickness:1px}
+.gfs-content :focus-visible{outline:var(--border-focus) solid var(--bronze-ink);outline-offset:3px}
+
+/* Selectors: the filter bar's keyed pills, then the one action. */
+.gfs-filters{margin-top:var(--space-block)}
+.gfs-filters .ui-button{min-height:var(--size-control-compact)}
+.gfs-jump{display:flex;flex-wrap:wrap;gap:0 var(--space-block);margin:var(--space-block) 0 0;font:var(--type-label)}
+.gfs-jump a{display:inline-flex;align-items:center;min-height:var(--size-target);color:var(--ink-soft)}
+.gfs-jump a:hover{color:var(--bronze-ink)}
+.gfs-section{scroll-margin-top:var(--space-block)}
+.gfs-section .ui-section-note{max-width:var(--size-readable)}
+
+/* Overview: the scope, the group, a sentence, the figures, two charts. */
+.gfs-kicker{margin:0 0 var(--space-line);font:var(--type-label);color:var(--money-ink)}
+.gfs-summary{margin:0 0 var(--space-block);font:var(--type-body);color:var(--ink);text-wrap:pretty}
+.gfs-figures{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-block) var(--space-group);margin:0 0 var(--space-group)}
+@media(min-width:700px){.gfs-figures{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1200px){.gfs-figures{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.gfs-figure{display:flex;flex-direction:column;gap:var(--space-line);min-width:0;padding-top:var(--space-row);border-top:var(--border-hairline) solid var(--divider-subtle)}
+.gfs-figure dt{order:0;font:var(--type-label);color:var(--ink-soft)}
+.gfs-figure dd{margin:0}
+.gfs-figure-value{font:var(--type-tile-figure);font-variant-numeric:tabular-nums;color:var(--ink)}
+.gfs-figure-value a{color:inherit}
+.gfs-figure-note{font:var(--type-fine);color:var(--ink-soft)}
+
+.gfs-trend{margin:0 0 var(--space-block)}
+.gfs-trend-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-group)}
+@media(min-width:900px){.gfs-trend-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-section)}}
+.gfs-chart{min-width:0}
+.gfs-chart-title{margin:0 0 var(--space-line);font:var(--type-subheading);color:var(--ink)}
+.gfs-legend{margin:0 0 var(--space-row)}
+.gfs-key{display:inline-flex;align-items:center;gap:var(--space-tight);font-variant-numeric:tabular-nums}
+.gfs-key::before{content:"";display:inline-block;width:1.25rem;height:0;border-top:2px solid var(--chart-mark)}
+.gfs-key-expenses::before{border-top:2px dashed var(--chart-contrast)}
+.gfs-key-surplus::before,.gfs-key-deficit::before{width:.75rem;height:.75rem;border:0;background:var(--chart-mark)}
+.gfs-key-deficit::before{background:var(--chart-contrast)}
+.gfs-plot{position:relative;height:11rem;margin-left:4.25rem}
+.gfs-plot svg{display:block;width:100%;height:100%;overflow:visible}
+.gfs-tick{position:absolute;left:-4.25rem;width:3.75rem;transform:translateY(-50%);font:var(--type-fine);color:var(--ink-soft);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.gfs-grid{stroke:var(--chart-baseline);stroke-width:1;vector-effect:non-scaling-stroke}
+.gfs-zero{stroke:var(--line-control);stroke-width:1;vector-effect:non-scaling-stroke}
+.gfs-line{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.gfs-line-revenue{stroke:var(--chart-mark)}
+.gfs-line-expenses{stroke:var(--chart-contrast);stroke-dasharray:6 4}
+.gfs-bar.is-surplus{fill:var(--chart-mark)}
+.gfs-bar.is-deficit{fill:var(--chart-contrast)}
+.gfs-hit{fill:transparent}
+.gfs-hit:hover{fill:var(--bronze-wash)}
+.gfs-axis{display:grid;margin:var(--space-line) 0 0 4.25rem;font:var(--type-fine);color:var(--ink-soft);font-variant-numeric:tabular-nums;text-align:center}
+.gfs-axis span{min-width:0;white-space:nowrap}
+.gfs-axis .is-minor{visibility:hidden}
+@media(width < 600px){.gfs-axis span:not(:first-child,:last-child){visibility:hidden}.gfs-axis span:first-child{visibility:visible;text-align:start}.gfs-axis span:last-child{text-align:end}}
+.gfs-chart-text{margin:var(--space-row) 0 0;font:var(--type-metadata);color:var(--ink-soft)}
+.gfs-trend-data,.gfs-cells{margin-top:var(--space-block);border-top:var(--border-hairline) solid var(--divider-subtle)}
+.gfs-cells .ui-disclosure-body p{margin:0 0 var(--space-row);font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere}
+.gfs-table-scroll{overflow-x:auto}
+.gfs-trend-data .ui-table{max-width:40rem}
+
+/* Compare: one row per published group, the ABS total first. */
+.gfs-compare{table-layout:fixed;min-width:44rem}
+.gfs-compare th[scope="col"]:first-child{width:22%}
+.gfs-compare th[scope="row"]{font:var(--type-strong);color:var(--ink);vertical-align:top}
+.gfs-compare th[scope="row"] small{display:block;margin-top:var(--space-line);font:var(--type-fine);color:var(--ink-soft)}
+.gfs-compare td{vertical-align:top;font:var(--type-strong);font-variant-numeric:tabular-nums}
+.gfs-compare td a{color:var(--ink)}
+.gfs-compare tr.is-total > *{background:var(--paper-sunken)}
+.gfs-compare tbody tr.is-total > *{border-bottom:var(--border-hairline) solid var(--divider-default)}
+.gfs-bar-track{display:block;height:var(--sp-4);margin:var(--space-tight) 0 0 auto;border-radius:var(--radius-pill);background:var(--chart-baseline);overflow:hidden;direction:rtl}
+.gfs-bar-track i{display:block;height:100%;border-radius:inherit;background:var(--chart-mark)}
+.gfs-bar-expenses i{background:var(--chart-contrast)}
+@media(width < 700px){
+  .gfs-table-scroll:has(.gfs-compare){overflow:visible}
+  .gfs-compare,.gfs-compare tbody{display:block;min-width:0;width:100%}
+  .gfs-compare thead{display:none}
+  .gfs-compare tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-row) var(--space-block);padding:var(--space-row) 0;border-bottom:var(--border-hairline) solid var(--divider-subtle)}
+  .gfs-compare tr.is-total{padding-inline:var(--space-row);background:var(--paper-sunken)}
+  .gfs-compare tr > *,.gfs-compare tbody td.ui-num{display:block;padding:0;border:0!important;background:none!important;text-align:start}
+  .gfs-compare th[scope="row"]{grid-column:1/-1}
+  .gfs-compare td::before{content:attr(data-label);display:block;margin-bottom:var(--space-line);font:var(--type-fine);color:var(--ink-soft)}
+  .gfs-compare td:not(:has(a))::before{display:none}
+  .gfs-bar-track{margin-left:0;direction:ltr}
+}
+
+/* Spending by function: the lead group's bars, then a small multiple per jurisdiction. */
+:is(.gfs-fn-lead,.gfs-fn-card) .gfs-group-name{margin:0;font:var(--type-subheading);color:var(--ink)}
+.gfs-consolidation{margin:var(--space-line) 0 0;font:var(--type-fine);color:var(--ink-soft)}
+.gfs-fn-only{margin:var(--space-tight) 0 0;font:var(--type-metadata);color:var(--ink-soft)}
+.gfs-fn-bars{max-width:52rem;margin:var(--space-heading) 0 0;padding:0;list-style:none}
+.gfs-fn{padding-block:var(--space-row);border-top:var(--border-hairline) solid var(--divider-subtle)}
+.gfs-fn-head{display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-block)}
+.gfs-fn-name{min-width:0;font:var(--type-body);color:var(--ink);overflow-wrap:anywhere}
+.gfs-fn-figure{flex:none;font:var(--type-strong);font-variant-numeric:tabular-nums;white-space:nowrap}
+.gfs-fn-figure a{color:var(--ink)}
+.gfs-fn-share{display:inline-block;min-width:3.25ch;margin-left:var(--space-tight);font:var(--type-fine);color:var(--ink-soft);text-align:right}
+.gfs-fn-track{height:6px;margin-top:var(--space-tight)}
+.gfs-fn-groups{margin:var(--space-tight) 0 0;font:var(--type-fine);color:var(--ink-soft)}
+.gfs-fn-groups a{white-space:nowrap}
+.gfs-fn-total{display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-block);max-width:52rem;margin:0;padding:var(--space-row) calc(3.25ch + var(--space-tight)) 0 0;border-top:var(--border-hairline) solid var(--divider-default);font:var(--type-strong);font-variant-numeric:tabular-nums}
+.gfs-fn-total a{color:var(--ink)}
+.gfs-fn-each{margin-top:var(--space-section)}
+.gfs-fn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr));gap:var(--space-group) var(--space-block)}
+.gfs-fn-card{min-width:0;padding-top:var(--space-row);border-top:var(--border-hairline) solid var(--divider-default)}
+.gfs-fn-card .gfs-fn-total{margin-top:var(--space-tight);padding:0!important;border:0;font:var(--type-metadata);color:var(--ink-soft)}
+.gfs-fn-card .gfs-fn-total a{font:var(--type-strong);color:var(--ink)}
+.gfs-fn-mini{margin:var(--space-row) 0 0;padding:0;list-style:none}
+.gfs-fn-mini li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--space-line) var(--space-tight);padding-block:var(--space-line);font:var(--type-fine);font-variant-numeric:tabular-nums}
+.gfs-fn-mini .gfs-fn-name{font:inherit;color:var(--ink-soft)}
+.gfs-fn-mini a{color:var(--ink)}
+.gfs-fn-mini .ui-bar{grid-column:1/-1}
+
+/* Terms: a word and its meaning, two columns when wide. */
+.gfs-terms{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-block) var(--space-section);margin:0}
+@media(min-width:900px){.gfs-terms{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.gfs-terms dt{font:var(--type-strong);color:var(--ink)}
+.gfs-terms dd{margin:var(--space-line) 0 0;font:var(--type-metadata);color:var(--ink-soft)}
+.gfs-related{margin-top:0}
+
 /* Keep the shared table, controls and CSV. On phones each published row puts
    its measure and amount first, with the jurisdiction/year/source below. */
 @media(width < 600px){
@@ -43,4 +141,8 @@
   :is(#government-finance-table,#government-function-table) td:is([data-label="Measure"],[data-label="Function as published"]){grid-area:1/1;font:var(--type-strong)}
   :is(#government-finance-table,#government-function-table) td:is([data-label="Measure"],[data-label="Function as published"])::before{display:none}
   :is(#government-finance-table,#government-function-table) td[data-label="Amount (AUD)"]{grid-area:1/2;text-align:end;white-space:nowrap;font:var(--type-strong)}
+}
+@media(forced-colors:active){
+  .gfs-line-revenue,.gfs-zero{stroke:CanvasText}.gfs-line-expenses{stroke:GrayText}
+  .gfs-bar.is-surplus,.gfs-bar-track i,.gfs-fn-track i{fill:CanvasText;background:CanvasText}.gfs-bar.is-deficit,.gfs-bar-expenses i{fill:GrayText;background:GrayText}
 }

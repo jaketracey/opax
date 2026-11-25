@@ -21,11 +21,17 @@ test('SSR shows jurisdiction figures, fiscal years, accrual/consolidation explan
  const result=await page(fixture());assert.equal(result.status,200);
  const doc=new JSDOM(result.prerender).window.document;
  assert.equal(doc.querySelector('h1').textContent,'Government finance');
- assert.equal(doc.querySelectorAll('.gfs-jurisdiction').length,1);
- assert.match(doc.querySelector('.gfs-jurisdiction').textContent,/New South Wales/);
- assert.match(doc.body.textContent,/\$120bn/);assert.doesNotMatch(doc.querySelector('.gfs-jurisdiction dl').textContent,/Not published|Net debt/);
+ const lead=doc.querySelector('.gfs-overview[data-gfs-group]');
+ assert.equal(lead.dataset.gfsGroup,'New South Wales');assert.match(lead.querySelector('.gfs-group-name').textContent,/New South Wales/);
+ // One published group: no comparison table to build.
+ assert.equal(doc.querySelector('#gfs-compare'),null);
+ assert.match(doc.body.textContent,/\$120bn/);assert.doesNotMatch(lead.querySelector('.gfs-figures').textContent,/Not published|Net debt/);
+ assert.match(lead.querySelector('.gfs-summary').textContent,/revenue of \$120bn and expenses of \$100bn\. That is an operating surplus of \$20bn\./);
  assert.match(doc.body.textContent,/accrual accounting/);assert.match(doc.body.textContent,/consolidates transfers/);
- for(const section of doc.querySelectorAll('section[aria-labelledby^="gfs-"]'))assert.match(section.textContent,/Snapshot.*CC BY 4\.0/);
+ const sections=[...doc.querySelectorAll('section[aria-labelledby^="gfs-"]')];
+ assert.ok(sections.length>=5);
+ // Every section that shows a source figure carries its receipt.
+ for(const section of sections.filter(s=>s.querySelector('a[title]')))assert.match(section.textContent,/Snapshot.*CC BY 4\.0/s);
  assert.match(result.prerender,/Table_1!B7/);assert.match(result.prerender,/2026-04-21/);
  assert.equal(doc.querySelectorAll('a[href^="/state"]').length,0);
 });
@@ -80,8 +86,8 @@ test('changing NSW to Commonwealth resets the stale jurisdiction to its first pu
  assert.equal(doc.querySelector('[name="level"]').value,'Commonwealth');
  assert.equal(doc.querySelector('[name="jurisdiction"]').value,'Australia');
  assert.deepEqual([...doc.querySelectorAll('[name="jurisdiction"] option')].map(o=>o.value),['','Australia']);
- assert.equal(doc.querySelectorAll('.gfs-jurisdiction').length,1);
- assert.equal(doc.querySelector('.gfs-jurisdiction h3').textContent,'Commonwealth government');
+ assert.equal(doc.querySelectorAll('.gfs-overview[data-gfs-group]').length,1);
+ assert.equal(doc.querySelector('#gfs-headlines').textContent,'Commonwealth government');
  assert.equal(JSON.parse(doc.querySelector('[data-register-table="government-finance-table"] [data-dt-page]').textContent).total,50);
 });
 
@@ -95,15 +101,15 @@ test('National plus Total public sector resets to a valid sector and never rende
  assert.deepEqual([...doc.querySelectorAll('[name="sector"] option')].map(o=>o.value),['General government']);
  assert.deepEqual([...doc.querySelectorAll('[name="jurisdiction"] option')].map(o=>o.value),['','Australia']);
  assert.equal(JSON.parse(doc.querySelector('[data-dt-page]').textContent).total,1);
- assert.deepEqual([...doc.querySelectorAll('.gfs-jurisdiction dt')].map(n=>n.textContent),['Net debt (L2)']);
- assert.doesNotMatch(doc.querySelector('.gfs-jurisdiction dl').textContent,/Not published/);
+ assert.deepEqual([...doc.querySelectorAll('.gfs-figures dt')].map(n=>n.textContent),['Net debt (L2)']);
+ assert.doesNotMatch(doc.querySelector('.gfs-figures').textContent,/Not published/);
 });
 
 test('headline cards omit absent measures and retain Not published only for an actual null source cell',async()=>{
  const hub=fixture();hub.rows.find(r=>r.reference_year==='2024-25' && r.measure==='revenue').value=null;
  hub.rows.find(r=>r.reference_year==='2024-25' && r.measure==='expenses').value=0;
  const result=await page(hub),doc=new JSDOM(result.prerender).window.document;
- const values=[...doc.querySelectorAll('.gfs-jurisdiction dl > div')].map(n=>[n.querySelector('dt').textContent,n.querySelector('dd').textContent]);
+ const values=[...doc.querySelectorAll('.gfs-figures > div')].map(n=>[n.querySelector('dt').textContent,n.querySelector('.gfs-figure-value').textContent]);
  assert.equal(values.length,5);
  assert.equal(values.find(([label])=>label==='Revenue')[1],'Not published');
  assert.equal(values.find(([label])=>label==='Expenses')[1],'$0.00');
@@ -123,4 +129,55 @@ test('staged projection exposes unique source cells with cleared workbook proven
  const rows=clearedGovernmentFinance(hub);assert.equal(rows.length,hub.rows.length);assert.ok(rows.length>3000);
  assert.equal(new Set(rows.map(r=>JSON.stringify([r.release,r.level_of_government,r.jurisdiction,r.sector,r.measure,r.reference_year]))).size,rows.length);
  assert.ok(rows.every(r=>r.published && r.source_url.startsWith('https://www.abs.gov.au/')));
+});
+
+test('summary names surplus or deficit from the sign of the published balance and adds nothing',async()=>{
+ const {governmentFinanceSummary}=await import('../src/government-finance.ts');
+ const rows=(values)=>Object.entries(values).map(([measure,value])=>({measure,value,reference_year:'2024-25'}));
+ const deficit=governmentFinanceSummary(rows({revenue:398800,expenses:409500,net_operating_balance:-10700,net_lending_borrowing:-48200,net_worth:1200000,net_debt_l2:328100}),'State','Australia','General government');
+ assert.equal(deficit,'In 2024–25, total state governments (general government sector) recorded revenue of $398.8bn and expenses of $409.5bn. That is an operating deficit of $10.7bn. Counting net spending on new assets such as roads and buildings, net borrowing was $48.2bn. At 30 June 2025, net worth was $1.2tn and net debt (L2) was $328.1bn.');
+ const surplus=governmentFinanceSummary(rows({net_operating_balance:3700,net_lending_borrowing:1400}),'State','Western Australia','General government');
+ assert.equal(surplus,'In 2024–25, the Western Australia government (general government sector) recorded an operating surplus of $3.7bn. Counting net spending on new assets such as roads and buildings, net lending was $1.4bn.');
+ // The balance is read, never derived from revenue and expenses.
+ assert.doesNotMatch(governmentFinanceSummary(rows({revenue:100,expenses:200}),'Commonwealth','Australia','General government'),/deficit|surplus/);
+ assert.match(governmentFinanceSummary(rows({net_debt_l2:500}),'National','Australia','General government'),/^For national general government \(general government sector\), at 30 June 2025, net debt \(L2\) was \$500m\.$/);
+});
+
+test('trend charts use published years in order, round scale ceilings and count deficit years',async()=>{
+ const {governmentFinanceTrend,niceCeiling,balanceStory}=await import('../src/government-finance.ts');
+ assert.deepEqual([409492,26337,15000,0.42,0,-5].map(niceCeiling),[450000,30000,15000,0.45,0,0]);
+ const rows=[['2016-17',10000],['2015-16',5000],['2019-20',-26337],['2018-19',null],['2017-18',-200]].flatMap(([y,v])=>[
+  {measure:'net_operating_balance',reference_year:y,value:v},{measure:'revenue',reference_year:y,value:100}]);
+ const points=governmentFinanceTrend(rows);
+ assert.deepEqual(points.map(p=>p.year),['2015-16','2016-17','2017-18','2018-19','2019-20']);
+ assert.equal(points[0].balance.value,5000);
+ const story=balanceStory(points);
+ assert.deepEqual([story.years,story.deficits,story.surpluses,story.largestDeficit.year,story.largestSurplus.year],[4,2,2,'2019-20','2016-17']);
+ const result=await page(fixture()),doc=new JSDOM(result.prerender).window.document;
+ // Two published years are too few for a chart; the figures still show.
+ assert.equal(doc.querySelector('.gfs-trend'),null);assert.ok(doc.querySelector('.gfs-figures'));
+});
+
+test('lead chart and caption come from the selected group’s own published cells',async()=>{
+ const hub=JSON.parse(readFileSync(new URL('../../data/staged/abs-gfs/hub.json',import.meta.url),'utf8'));
+ const result=await page(hub,'?level=State&sector=General%20government&jurisdiction=Queensland'),doc=new JSDOM(result.prerender).window.document;
+ const own=clearedGovernmentFinance(hub).filter(r=>r.level_of_government==='State' && r.sector==='General government' && r.jurisdiction==='Queensland');
+ const years=[...new Set(own.map(r=>r.reference_year))].sort();
+ assert.equal(doc.querySelectorAll('.gfs-trend .gfs-axis')[0].children.length,years.length);
+ const data=[...doc.querySelectorAll('.gfs-trend-data tbody a[title]')];
+ assert.ok(data.length>=years.length);
+ for(const link of data)assert.ok(own.some(r=>`${r.workbook} · ${r.sheet}!${r.cell}`===link.title && r.source_url===link.href),link.title);
+ const balances=own.filter(r=>r.measure==='net_operating_balance' && r.value!==null);
+ assert.match(doc.querySelector('#gfs-trend-balance-text').textContent,new RegExp(`^${balances.filter(r=>r.value<0).length} deficits? and ${balances.filter(r=>r.value>0).length} surplus(es)? in ${balances.length} years\\.`));
+ assert.equal(doc.querySelectorAll('.gfs-bar').length,balances.length);
+});
+
+test('comparison lists each published group once, ABS total first, with no built totals',async()=>{
+ const hub=JSON.parse(readFileSync(new URL('../../data/staged/abs-gfs/hub.json',import.meta.url),'utf8'));
+ const doc=new JSDOM((await page(hub)).prerender).window.document;
+ const rows=[...doc.querySelectorAll('.gfs-compare tbody tr')].map(r=>r.dataset.gfsGroup);
+ assert.equal(rows[0],'Australia');assert.deepEqual(rows.slice(1),[...rows.slice(1)].sort());
+ assert.equal(new Set(rows).size,rows.length);
+ assert.ok(doc.querySelector('.gfs-compare tr.is-total small').textContent.includes('not a sum'));
+ for(const link of doc.querySelectorAll('.gfs-compare a[title]'))assert.ok(clearedGovernmentFinance(hub).some(r=>`${r.workbook} · ${r.sheet}!${r.cell}`===link.title));
 });

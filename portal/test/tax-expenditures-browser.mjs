@@ -39,7 +39,7 @@ try{
   await page.screenshot({path:resolve(root,`portal/private/tax-expenditures/tax-expenditures-${width}-top.png`),fullPage:false});
   await page.evaluate(()=>scrollTo(0,scrollY+document.querySelector('.dt-scroll').getBoundingClientRect().top-160));
   await page.screenshot({path:resolve(root,`portal/private/tax-expenditures/tax-expenditures-${width}-table.png`),fullPage:false});
-  results.push({width,status:response.status(),horizontalOverflow:overflow,table,headlineItems:await page.locator('#tax-largest + p + .tax-items .tax-item').count(),combinedCards:await page.locator('#tax-combined + p + .tax-items .tax-item').count(),visibleRows:await page.locator('[data-datatable] tbody tr').count(),rows:JSON.parse(await page.locator('[data-dt-page]').textContent()).total});
+  results.push({width,status:response.status(),horizontalOverflow:overflow,table,headlineItems:await page.locator('.tax-bars > li').count(),combinedCards:await page.locator('.tax-combined-card').count(),visibleRows:await page.locator('[data-datatable] tbody tr').count(),rows:JSON.parse(await page.locator('[data-dt-page]').textContent()).total});
  }
  const fullDownload=page.waitForEvent('download');await page.locator('[data-export]').click();
  const fullCSV=await readFile(await(await fullDownload).path(),'utf8');
@@ -57,7 +57,7 @@ try{
  const staticContext=await browser.newContext({javaScriptEnabled:false});
  await staticContext.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
  const staticPage=await staticContext.newPage();await staticPage.setViewportSize({width:390,height:1000});await staticPage.goto(base+'/register/tax-expenditures');
- if(await staticPage.locator('.tax-item').count()!==8 || await staticPage.locator('[data-datatable] tbody tr').count()!==25)throw Error('Estimates require JavaScript');
+ if(await staticPage.locator('.tax-bar-row').count()!==15 || await staticPage.locator('.tax-combined-card').count()!==2 || await staticPage.locator('[data-datatable] tbody tr').count()!==25)throw Error('Estimates require JavaScript');
  const staticPhone=await geometry(staticPage);assertPhone(staticPhone);await staticContext.close();
  const ready=await(await context.request.get(base+'/tax-expenditures/ready.json')).json();if(!ready.ready||ready.count!==2444)throw Error('Data readiness gate remains closed');
  await page.getByRole('button',{name:'Money',exact:true}).click();

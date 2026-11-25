@@ -55,18 +55,70 @@ export function governmentFunctionRows(h:GFSHub):Row[]{
     series_basis:r.series_basis,consolidation:r.consolidation,publisher:'Australian Bureau of Statistics',source_url:r.source_url,
     source_locator:`${r.workbook} · ${r.sheet}!${r.cell}`,snapshot:r.snapshot,sha256:r.sha256,licence:r.licence,licence_url:r.licence_url}))
 }
-export function spendingByFunction(h:GFSHub,url:URL,selection:{release:string;level:string;sector:string;jurisdiction:string}){
+
+/** A published label in reading form: "Total public order and safety" reads as
+ *  "Public order and safety". The published wording stays on the cell link. */
+export const functionName=(label:string)=>{const s=label.replace(/^total\s+/i,'').trim();return s.charAt(0).toUpperCase()+s.slice(1)}
+export type FunctionBar={row:GFSFunctionRow;name:string;share:number|null;width:number;groups:GFSFunctionRow[]}
+/** One group's published split for one year. Bars are each published division
+ *  against the group's own published total (no total is built here); groups are
+ *  the published rows inside a division, listed under it, never added to it.
+ *  Where a workbook publishes only education by purpose, its groups are the bars
+ *  and the education total is the total. */
+export function functionBreakdown(rows:GFSFunctionRow[]){
+  const fns=rows.filter(r=>r.measure==='expenses_by_function'),educationOnly=!fns.length
+  const pool=educationOnly?rows.filter(r=>r.measure==='education_operating_expenses'):fns
+  const total=pool.find(r=>r.function_level===(educationOnly?'division':'total'))
+  const parts=pool.filter(r=>r.function_level===(educationOnly?'group':'division'))
+  const base=total?.value!=null && total.value>0?total.value:null
+  const scale=base??Math.max(0,...parts.map(r=>r.value??0))
+  const bars:FunctionBar[]=parts.map(row=>({row,name:functionName(educationOnly?row.group||row.function_as_published:row.function_as_published),
+    share:base!==null && row.value!==null?row.value/base:null,width:scale>0 && row.value!==null?Math.max(0,Math.min(1,row.value/scale)):0,
+    groups:educationOnly?[]:pool.filter(g=>g.function_level==='group' && normalize(g.division)===normalize(row.division))}))
+    .sort((a,b)=>(b.row.value??-Infinity)-(a.row.value??-Infinity) || a.name.localeCompare(b.name))
+  return {educationOnly,total,bars}
+}
+const money=(r:GFSFunctionRow)=>r.value===null?'Not published':formatCell(r.value*1e6,{key:'amount',label:'Amount',type:'money'})
+const cell=(r:GFSFunctionRow)=>`<a href="${esc(r.source_url)}" title="${esc(r.workbook+' · '+r.sheet+'!'+r.cell)}">${esc(money(r))}</a>`
+const pct=(share:number|null)=>share===null?'':share>0 && share<0.005?'<1%':Math.round(share*100)+'%'
+const width=(w:number)=>`${Math.round(w*1000)/10}%`
+const fy=(y:string)=>y.replace('-','–')
+
+export function spendingByFunction(h:GFSHub,url:URL,selection:{release:string;level:string;sector:string;jurisdiction:string},source:(notes:string[])=>string,lead?:string){
   const selected=clearedGovernmentFunctions(h).filter(r=>r.release===selection.release && r.level_of_government===selection.level
     && r.sector===selection.sector && (!selection.jurisdiction || r.jurisdiction===selection.jurisdiction))
-  if(!selected.length)return {rejected:false,html:`<section aria-labelledby="gfs-functions"><h2 id="gfs-functions">Spending by function</h2><p>A function breakdown is not available in this snapshot for this level and sector. Choose a general government group.</p>${receipt(h)}</section>`}
-  const latest=selected.map(r=>r.reference_year).sort().at(-1)
+  const notes=['ABS reports expenses by purpose using COFOG-A. Division totals and the published groups inside them are separate rows: adding both would count the same expenses twice.',
+    'These workbooks publish labels without numeric classification codes. Combined categories retain their published wording; each figure links to its original cell.',
+    'Education by purpose is a separate series. ABS consolidates transfers within each published group. OPAX adds nothing up: each share is one published division divided by the same group’s published total expenses.']
+  if(!selected.length)return {rejected:false,html:`<section class="ui-section gfs-section" data-accent="money" aria-labelledby="gfs-functions"><h2 id="gfs-functions" class="ui-section-title">Spending by function</h2><p class="ui-empty">A function breakdown is not available in this snapshot for this level and sector. Choose a general government group.</p>${source(notes)}</section>`}
+  const latest=selected.map(r=>r.reference_year).sort().at(-1)!
   const latestRows=selected.filter(r=>r.reference_year===latest)
-  const cards=[...new Set(latestRows.map(r=>r.jurisdiction))].sort().map(j=>{
-    const rows=latestRows.filter(r=>r.jurisdiction===j),functions=rows.filter(r=>r.measure==='expenses_by_function' && r.function_level!=='group')
-    const display=functions.length?functions:rows.filter(r=>r.measure==='education_operating_expenses')
-    return `<article class="gfs-function-jurisdiction"><h3>${esc(governmentFinanceGroupHeading(display[0].level_of_government,j))}</h3><p class="gfs-receipt">${esc(display[0].consolidation)}</p>${functions.length?'':'<p>Education only; this workbook does not publish an all-function split for this group.</p>'}<dl>${display.map(r=>`<div${r.function_level==='total'?' class="gfs-function-total"':''}><dt>${esc(r.function_as_published)}</dt><dd><a href="${esc(r.source_url)}" title="${esc(r.workbook+' · '+r.sheet+'!'+r.cell)}">${r.value===null?'Not published':formatCell(r.value*1e6,{key:'amount',label:'Amount',type:'money'})}</a></dd></div>`).join('')}</dl>${receipt(h)}<details><summary>Original cells and source hashes</summary>${display.map(r=>`<p><a href="${esc(r.source_url)}">${esc(r.function_as_published)} · ${esc(r.sheet+'!'+r.cell)}</a><br>Snapshot ${esc(r.snapshot)} · SHA-256 ${esc(r.sha256)}</p>`).join('')}</details></article>`
+  const jurisdictions=[...new Set(latestRows.map(r=>r.jurisdiction))].sort()
+  const first=lead && jurisdictions.includes(lead)?lead:jurisdictions.includes('Australia')?'Australia':jurisdictions[0]
+  const heading=(j:string)=>governmentFinanceGroupHeading(selection.level,j)
+  const split=(j:string)=>functionBreakdown(latestRows.filter(r=>r.jurisdiction===j))
+  const main=split(first),order=main.bars.map(b=>normalize(b.row.division)+'|'+b.name)
+  const groupLine=(b:FunctionBar)=>b.groups.length?`<p class="gfs-fn-groups">Published groups within it: ${b.groups.map(g=>`${esc(g.function_as_published)} ${cell(g)}`).join(' · ')}</p>`:''
+  const educationNote='<p class="gfs-fn-only">Education only; this workbook does not publish an all-function split for this group.</p>'
+  const total=(t:GFSFunctionRow|undefined,label:string)=>t?`<p class="gfs-fn-total"><span>${label}</span>${cell(t)}</p>`:''
+  const leadHTML=`<div class="gfs-fn-lead" data-gfs-group="${esc(first)}"><h3 class="gfs-group-name">${esc(heading(first))}</h3><p class="gfs-consolidation">${esc((main.total||main.bars[0]?.row)?.consolidation)}</p>${main.educationOnly?educationNote:''}`
+    +`<ol class="gfs-fn-bars">${main.bars.map(b=>`<li class="gfs-fn"><div class="gfs-fn-head"><span class="gfs-fn-name">${esc(b.name)}</span><span class="gfs-fn-figure">${cell(b.row)}${b.share!==null?`<span class="gfs-fn-share">${pct(b.share)}</span>`:''}</span></div><span class="ui-bar gfs-fn-track" aria-hidden="true"><i style="width:${width(b.width)}"></i></span>${groupLine(b)}</li>`).join('')}</ol>`
+    +total(main.total,main.educationOnly?'Total operating expenses on education':'Total expenses')+'</div>'
+  const others=jurisdictions.filter(j=>j!==first).map(j=>{
+    const s=split(j),rank=(b:FunctionBar)=>{const i=order.indexOf(normalize(b.row.division)+'|'+b.name);return i<0?order.length:i}
+    const bars=[...s.bars].sort((a,b)=>rank(a)-rank(b))
+    return `<article class="gfs-fn-card" data-gfs-group="${esc(j)}"><h4 class="gfs-group-name">${esc(heading(j))}</h4>${s.educationOnly && !main.educationOnly?educationNote:''}${total(s.total,s.educationOnly?'Education total':'Total expenses')}<ol class="gfs-fn-mini">${bars.map(b=>`<li><span class="gfs-fn-name">${esc(b.name)}</span>${cell(b.row)}<span class="ui-bar" aria-hidden="true"><i style="width:${width(b.width)}"></i></span></li>`).join('')}</ol></article>`
   }).join('')
+  const provenance=`<details class="ui-disclosure gfs-cells"><summary>Original cells and source hashes</summary><div class="ui-disclosure-body">${jurisdictions.map(j=>{
+    const rows=latestRows.filter(r=>r.jurisdiction===j),files=[...new Map(rows.map(r=>[r.workbook,r])).values()]
+    return `<p><strong>${esc(heading(j))}</strong> · ${esc(rows[0].consolidation)}<br>${rows.map(r=>`<a href="${esc(r.source_url)}">${esc(r.function_as_published)} · ${esc(r.sheet+'!'+r.cell)}</a>`).join(' · ')}<br>${files.map(r=>`${esc(r.workbook)} · Snapshot ${esc(r.snapshot)} · SHA-256 ${esc(r.sha256)}`).join('<br>')}</p>`
+  }).join('')}</div></details>`
   const config=governmentFunctionTableConfig(governmentFunctionRows({...h,function_rows:selected})),guarded=guardTableURL(config,url)
-  return {rejected:guarded.rejected,html:`<section aria-labelledby="gfs-functions"><h2 id="gfs-functions">Spending by function</h2><p>${esc(latest)} · ${esc(selection.level)} · ${esc(selection.sector)}. ABS reports expenses by purpose using COFOG-A. Division totals and published groups are separate rows; adding both would count the same expenses twice. Australian dollars, current prices, original series.</p><p>These workbooks publish labels without numeric classification codes. Combined categories retain their published wording. Education by purpose is a separate series; ABS consolidates transfers within each published group. No totals are calculated across levels, jurisdictions or functions for display.</p><div class="gfs-jurisdictions gfs-function-split">${cards}</div><h3 id="gfs-function-series">Year-by-year spending by function</h3><p>Filter by division, published row level, series or year. CSV retains original labels, empty code fields, workbook cells, source values and snapshot hashes.</p>${registerTableHTML(config,guarded.query,url)}${receipt(h)}</section>`}
+  const what=main.educationOnly?'education expenses by purpose':'expenses by purpose'
+  return {rejected:guarded.rejected,html:`<section class="ui-section gfs-section" data-accent="money" aria-labelledby="gfs-functions"><h2 id="gfs-functions" class="ui-section-title">Spending by function</h2>`
+    +`<p class="ui-section-note">${esc(fy(latest))} ${esc(what)} for ${esc(selection.level.toLowerCase())} ${esc(selection.sector.toLowerCase())}, largest first. Each bar is that function’s share of the group’s published total; the published groups inside a function are listed under it and are already part of it.</p>`
+    +leadHTML+(others?`<h3 class="ui-subsection-title gfs-fn-each">Each jurisdiction</h3><p class="gfs-note">Same order as above. Each bar is measured against that jurisdiction’s own total expenses, so the shapes compare even where the totals differ.</p><div class="gfs-fn-grid">${others}</div>`:'')
+    +provenance
+    +`<h3 id="gfs-function-series" class="ui-subsection-title">Year-by-year spending by function</h3><p class="gfs-note">Every published division and group from ${esc(fy(selected.map(r=>r.reference_year).sort()[0]))} to ${esc(fy(latest))}. Filter by division, published row level, series or year; the CSV keeps original labels, empty code fields, workbook cells, source values and snapshot hashes.</p>${registerTableHTML(config,guarded.query,url)}`
+    +source(notes)+'</section>'}
 }
-function receipt(h:GFSHub){return `<p class="gfs-receipt">Source: <a href="${esc(h.release_url)}">Australian Bureau of Statistics</a> · Release ${esc(h.release)} · Released ${esc(h.release_date)} · Snapshot ${esc(h.generated_at.slice(0,10))} UTC · <a href="${CC}">CC BY 4.0</a></p>`}
