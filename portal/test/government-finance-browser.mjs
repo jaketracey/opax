@@ -41,7 +41,7 @@ try{
   await page.screenshot({path:resolve(root,`portal/private/abs-gfs/government-finance-${width}-viewport.png`),fullPage:false});
   await page.evaluate(()=>{const heading=document.getElementById('gfs-series');scrollTo(0,scrollY+heading.getBoundingClientRect().top-96);});
   await page.screenshot({path:resolve(root,`portal/private/abs-gfs/government-finance-${width}-table.png`),fullPage:false});
-  results.push({width,status:response.status(),horizontalOverflow:overflow,table,ledeGap,jurisdictions:await page.locator('.gfs-jurisdiction').count(),headlineFigures:await page.locator('.gfs-jurisdiction dl > div').count(),seriesRows:JSON.parse(await page.locator('[data-register-table="government-finance-table"] [data-dt-page]').textContent()).total});
+  results.push({width,status:response.status(),horizontalOverflow:overflow,table,ledeGap,jurisdictions:await page.locator('.gfs-compare tbody tr').count(),headlineFigures:await page.locator('.gfs-figures > div').count(),seriesRows:JSON.parse(await page.locator('[data-register-table="government-finance-table"] [data-dt-page]').textContent()).total});
  }
  const before=JSON.parse(await page.locator('[data-register-table="government-finance-table"] [data-dt-page]').textContent()).total;
  await page.locator('[data-register-table="government-finance-table"] [data-search]').fill('Net worth');
@@ -51,21 +51,21 @@ try{
  const csv=await readFile(await(await download).path(),'utf8');
  for(const field of ['SHA-256','Snapshot','Published value (AUD million)','ABS consolidation group'])if(!csv.includes(field))throw Error('CSV missing '+field);
  await page.selectOption('select[name="jurisdiction"]','New South Wales');await page.locator('.gfs-filters button').click();
- await page.waitForURL(/jurisdiction=New\+South\+Wales/);await page.waitForSelector('.gfs-jurisdiction');
- if(await page.locator('.gfs-jurisdiction h3').textContent()!=='New South Wales')throw Error('NSW selector did not apply');
+ await page.waitForURL(/jurisdiction=New\+South\+Wales/);await page.waitForSelector('.gfs-overview[data-gfs-group]');
+ if(await page.locator('#gfs-headlines').textContent()!=='New South Wales')throw Error('NSW selector did not apply');
  await page.selectOption('select[name="level"]','Commonwealth');await page.locator('.gfs-filters button').click();
- await page.waitForURL(/level=Commonwealth/);await page.waitForSelector('.gfs-jurisdiction');
- if(await page.locator('.gfs-jurisdiction').count()!==1)throw Error('Commonwealth selector mixed jurisdictions');
+ await page.waitForURL(/level=Commonwealth/);await page.waitForSelector('.gfs-overview[data-gfs-group]');
+ if(await page.locator('.gfs-compare').count()!==0)throw Error('Commonwealth selector mixed jurisdictions');
  if(await page.locator('select[name="jurisdiction"]').inputValue()!=='Australia')throw Error('Stale NSW jurisdiction did not reset');
  await page.selectOption('select[name="level"]','National');await page.selectOption('select[name="sector"]','Total public sector');await page.locator('.gfs-filters button').click();
- await page.waitForURL(/level=National/);await page.waitForSelector('.gfs-jurisdiction');
+ await page.waitForURL(/level=National/);await page.waitForSelector('.gfs-figures');
  if(await page.locator('select[name="sector"]').inputValue()!=='General government')throw Error('National sector did not reset');
- if(await page.locator('.gfs-jurisdiction dl > div').count()!==1 || await page.locator('.gfs-jurisdiction dt').textContent()!=='Net debt (L2)')throw Error('National card includes absent measures');
+ if(await page.locator('.gfs-figures > div').count()!==1 || await page.locator('.gfs-figures dt').textContent()!=='Net debt (L2)')throw Error('National card includes absent measures');
  if(JSON.parse(await page.locator('[data-register-table="government-finance-table"] [data-dt-page]').textContent()).total!==1)throw Error('National selector rendered an empty combination');
  const staticContext=await browser.newContext({javaScriptEnabled:false});
  await staticContext.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
  const staticPage=await staticContext.newPage();await staticPage.setViewportSize({width:390,height:1000});await staticPage.goto(base+'/register/government-finance');
- if(await staticPage.locator('.gfs-jurisdiction').count()!==9)throw Error('Jurisdiction headlines require JS');
+ if(await staticPage.locator('.gfs-compare tbody tr').count()!==9)throw Error('Jurisdiction headlines require JS');
  if(await staticPage.locator('#government-finance-table tbody tr').count()!==25)throw Error('Series requires JS');
  const staticTable=await tableGeometry(staticPage);assertPhoneTable(staticTable);
  await staticContext.close();

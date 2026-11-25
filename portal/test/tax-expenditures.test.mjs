@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
-import {clearedTaxExpenditures,taxExpendituresRows,taxExpendituresPage,taxExpendituresReady} from '../src/tax-expenditures.ts';
+import {clearedTaxExpenditures,taxExpendituresRows,taxExpendituresPage,taxExpendituresReady,cleanTitle,taxHeadline,taxLargest,taxSeries,taxCategories} from '../src/tax-expenditures.ts';
 import {taxExpendituresTableConfig,hydrateRegisterTables} from '../public/register-tables.js';
 import {toCSV} from '../public/datatable.js';
 const staged=JSON.parse(readFileSync(new URL('../../data/staged/tax-expenditures/hub.json',import.meta.url)));
@@ -12,12 +12,21 @@ const page=(h,query='')=>taxExpendituresPage(new URL('https://opax.test/register
 
 test('SSR defines benchmark/non-additivity and shows current statement year, sources and licences on every block',async()=>{
  const result=await page(fixture());assert.equal(result.status,200);const doc=new JSDOM(result.prerender).window.document;
- assert.equal(doc.querySelector('h1').textContent,'Tax expenditures');assert.match(doc.querySelector('#tax-largest').textContent,/2025-26/);
- assert.equal(doc.querySelectorAll('#tax-largest + p + .tax-items .tax-item').length,6);
+ assert.equal(doc.querySelector('h1').textContent,'Tax expenditures');assert.match(doc.querySelector('#tax-largest').textContent,/2025–26/);
+ assert.equal(doc.querySelectorAll('[aria-labelledby="tax-largest"] .tax-bars > li').length,15);
  assert.match(doc.body.textContent,/not additive/);
- assert.match(doc.body.textContent,/benchmark is a reporting choice/);
+ assert.match(doc.body.textContent,/benchmark is a reporting choice/i);
  assert.match(doc.body.textContent,/\$32bn/);assert.match(doc.body.textContent,/\$32.2bn/);
- for(const block of doc.querySelectorAll('section[aria-labelledby^="tax-"],.tax-item'))assert.match(block.textContent,/Treasury.*2025-26 statement.*Snapshot.*CC BY 4\.0/s);
+ assert.match(doc.querySelector('.tax-summary').textContent,/^Treasury lists 304 tax concessions\. For 2025–26 it puts a dollar figure on 127 of them and marks 150 as unquantifiable\. The largest single estimate is E8, .* at \$32bn of revenue forgone\. 18 estimates are negative/);
+ const sections=[...doc.querySelectorAll('section[aria-labelledby^="tax-"]')];assert.ok(sections.length>=7);
+ // Every block that shows a figure carries the statement, snapshot and licence.
+ for(const block of sections.filter(s=>s.querySelector('a[title]')))assert.match(block.textContent,/Snapshot.*Treasury, 2025–26 Tax Expenditures and Insights Statement.*2025-26 statement.*CC BY 4\.0/s);
+ for(const row of doc.querySelectorAll('.tax-bar-row'))assert.match(row.querySelector('.tax-details').textContent,/Benchmark.*Snapshot .*SHA-256 [a-f0-9]{64}/s);
+ // Shortcuts are table states the register already accepts.
+ for(const link of doc.querySelectorAll('.tax-quick a,.tax-cat-name a,.tax-more a')){
+  const href=new URL(link.href,'https://opax.test');assert.equal(href.pathname,'/register/tax-expenditures');
+  assert.equal((await page(fixture(),href.search)).status,200,href.search);
+ }
  assert.equal(doc.querySelectorAll('a[href^="/subject/"]').length,0);
 });
 
@@ -90,4 +99,33 @@ test('invalid or repeated query selectors fail closed and the Money link is list
  await import('../public/navigation.js');const nav=globalThis.OpaxNavigation;
  assert.equal(nav.active('/register/tax-expenditures'),'money');
  assert.equal(nav.groups.find(g=>g.id==='money').columns.flatMap(c=>c.links).find(l=>l.href==='/register/tax-expenditures').gate,undefined);
+});
+
+test('display titles decode Excel escapes and drop invisible characters; cells keep the published text',()=>{
+ assert.equal(cleanTitle('Medicare levy exemption for residents with taxable income below the low_x001F__x001F__x001F_-income thresholds'),'Medicare levy exemption for residents with taxable income below the low-income thresholds');
+ assert.equal(cleanTitle('Exempting lump sum payments in arrears from the Medicare levy_x000D_\n'),'Exempting lump sum payments in arrears from the Medicare levy');
+ assert.equal(cleanTitle('low-\u200dincome  thresholds'),'low-income thresholds');
+ const h=fixture(),rows=taxExpendituresRows(h);
+ assert.ok(rows.every(r=>!/_x[0-9A-F]{4}_|[\u0000-\u001f\u200b-\u200f]/i.test(r.title)));
+ assert.ok(clearedTaxExpenditures(h).some(r=>/_x001F_/.test(r.title)));
+});
+
+test('headline counts, largest items, series and categories come from published rows without sums',()=>{
+ const rows=clearedTaxExpenditures(fixture());
+ const head=taxHeadline(rows,'2025-26');
+ assert.deepEqual([head.items,head.categories,head.quantified,head.unquantifiable,head.negative,head.largest.item_id],[304,8,127,150,18,'E8']);
+ const largest=taxLargest(rows,'2025-26',15);
+ assert.equal(largest.length,15);assert.ok(largest.every(r=>r.record_kind==='item' && r.value>0 && r.measure_year==='2025-26'));
+ assert.deepEqual(largest.slice(0,5).map(r=>r.item_id),['E8','C2','E7','C4','E15']);
+ for(let i=1;i<largest.length;i++)assert.ok(largest[i-1].value>=largest[i].value);
+ // Ties keep item order (B61 and H2 are both $3.8bn).
+ assert.ok(largest.findIndex(r=>r.item_id==='B61')<largest.findIndex(r=>r.item_id==='H2'));
+ const series=taxSeries(rows,'E8');
+ assert.deepEqual(series.map(p=>p.year),['2021-22','2022-23','2023-24','2024-25','2025-26','2026-27','2027-28','2028-29']);
+ assert.equal(series.find(p=>p.year==='2025-26').value,32000);
+ const categories=taxCategories(rows,'2025-26');
+ assert.equal(categories.length,8);assert.equal(categories.reduce((n,c)=>n+c.items,0),304);
+ assert.deepEqual(categories[0],{...categories[0],name:'Business income tax',items:91});
+ assert.ok(categories.every(c=>Object.keys(c).every(k=>['name','items','quantified','unquantifiable','top'].includes(k))));
+ assert.deepEqual(categories.find(c=>c.name==='Capital gains tax').top.map(r=>r.item_id),['E8','E7','E15']);
 });

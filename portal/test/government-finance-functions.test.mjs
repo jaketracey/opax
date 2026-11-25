@@ -18,10 +18,10 @@ test('every headline and function heading identifies its published level and jur
   const [level,sector]=JSON.parse(selection),result=await page(h,'?'+new URLSearchParams({level,sector}));
   assert.equal(result.status,200);
   const doc=new JSDOM(result.prerender).window.document;
-  for(const card of doc.querySelectorAll('.gfs-jurisdiction,.gfs-function-jurisdiction')){
+  for(const card of doc.querySelectorAll('[data-gfs-group]')){
    const link=card.querySelector('a[title]'),source=all.find(r=>`${r.workbook} · ${r.sheet}!${r.cell}`===link.title && r.source_url===link.href);
-   assert.ok(source,link.title);assert.equal(source.level_of_government,level);
-   const heading=card.querySelector('h3').textContent;
+   assert.ok(source,link.title);assert.equal(source.level_of_government,level);assert.equal(source.jurisdiction,card.dataset.gfsGroup);
+   const heading=card.querySelector('.gfs-group-name').textContent;
    assert.equal(heading,source.jurisdiction==='Australia'?expected[level]:source.jurisdiction);
    assert.notEqual(heading,'Australia');assert.ok(!heading.includes('\u2014'));
    if(source.jurisdiction==='Australia')seen.add(level);
@@ -35,15 +35,19 @@ test('function split and year-by-year table render on the server with source rec
  const result=await page(fixture()),doc=new JSDOM(result.prerender).window.document;
  assert.equal(result.status,200);
  const section=doc.querySelector('[aria-labelledby="gfs-functions"]');
- assert.equal(section.querySelectorAll('.gfs-function-jurisdiction').length,9);
+ assert.equal(section.querySelectorAll('[data-gfs-group]').length,9);
  assert.ok(section.querySelectorAll('#government-function-table tbody tr').length>0);
  assert.match(section.textContent,/Hospital|Health|Total health/);
  assert.match(section.textContent,/Snapshot.*CC BY 4.0/);
  assert.match(section.textContent,/labels without numeric classification codes/);
  assert.match(section.textContent,/Total Expenses/);
- for(const card of section.querySelectorAll('article')){
-  assert.match(card.textContent,/SHA-256/);assert.match(card.textContent,/Released.*Snapshot.*CC BY 4.0/);
+ // Each group's original cells and file hashes sit under one disclosure.
+ const cells=section.querySelector('.gfs-cells');
+ for(const card of section.querySelectorAll('[data-gfs-group]')){
+  const block=[...cells.querySelectorAll('p')].find(p=>p.querySelector('strong').textContent===card.querySelector('.gfs-group-name').textContent);
+  assert.ok(block,card.dataset.gfsGroup);assert.match(block.textContent,/Snapshot .*SHA-256 [a-f0-9]{64}/);
  }
+ assert.match(section.textContent,/Released.*Snapshot.*CC BY 4.0/s);
  assert.doesNotMatch(section.textContent,/\d+(?:\.\d+)?(?:BN|M)\b/);
 });
 
@@ -75,9 +79,10 @@ test('education-only state/local selections are explicit and ACT stays State',as
  const result=await page(fixture(),'?level=State+and+local&sector=General+government&jurisdiction=Victoria');
  assert.equal(result.status,200);
  const doc=new JSDOM(result.prerender).window.document;
- assert.match(doc.querySelector('.gfs-function-jurisdiction').textContent,/Education only/);
- assert.match(doc.querySelector('.gfs-function-jurisdiction').textContent,/School education/);
- assert.equal(doc.querySelectorAll('.gfs-function-jurisdiction').length,1);
+ const functions=doc.querySelector('[aria-labelledby="gfs-functions"]');
+ assert.match(functions.querySelector('.gfs-fn-lead').textContent,/Education only/);
+ assert.match(functions.querySelector('.gfs-fn-lead').textContent,/School education/);
+ assert.equal(functions.querySelectorAll('[data-gfs-group]').length,1);
  const rows=clearedGovernmentFunctions(fixture());
  assert.ok(rows.filter(r=>r.workbook==='55120DO095_202425.xlsx' && r.sheet==='Table_16').every(r=>r.level_of_government==='State'));
  assert.ok(rows.every(r=>r.sheet!=='Table_19'));
@@ -104,4 +109,19 @@ test('function filter URLs reject duplicates and filter the independent table',a
  const rows=doc.querySelectorAll('#government-function-table tbody tr');assert.ok(rows.length>0);
  assert.ok([...rows].every(row=>row.textContent.includes('Hospital')));
  assert.equal(JSON.parse(doc.querySelector('[data-register-table="government-finance-table"] [data-dt-page]').textContent).total,451);
+});
+
+test('function bars are published divisions against the published total, largest first',async()=>{
+ const {functionBreakdown}=await import('../src/government-finance-functions.ts');
+ const row=(function_level,function_as_published,value,division=null,measure='expenses_by_function')=>({measure,function_level,function_as_published,division,group:null,value});
+ const split=functionBreakdown([row('total','Total Expenses',400),row('division','Education',80,'Education'),row('division','Total health',120,'Health'),
+  row('group','Hospital services',70,'Health'),row('division','Transport',null,'Transport')]);
+ assert.equal(split.total.value,400);assert.equal(split.educationOnly,false);
+ assert.deepEqual(split.bars.map(b=>[b.name,b.share,b.width]),[['Health',0.3,0.3],['Education',0.2,0.2],['Transport',null,0]]);
+ assert.deepEqual(split.bars[0].groups.map(g=>g.function_as_published),['Hospital services']);
+ // Education-only workbooks: groups become the bars, the education total the total.
+ const education=functionBreakdown([row('division','Total education',50,'Education','education_operating_expenses'),{...row('group','School education',40,'Education','education_operating_expenses'),group:'School education'}]);
+ assert.equal(education.educationOnly,true);assert.deepEqual(education.bars.map(b=>[b.name,b.share]),[['School education',0.8]]);
+ // No published total: bars scale to the largest part and carry no share.
+ assert.deepEqual(functionBreakdown([row('division','A',10,'A'),row('division','B',5,'B')]).bars.map(b=>[b.share,b.width]),[[null,1],[null,0.5]]);
 });

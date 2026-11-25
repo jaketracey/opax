@@ -1,17 +1,93 @@
+/* /register/tax-expenditures (src/tax-expenditures.ts). The page reads top
+   down: what a tax expenditure is, the statement year in counts, the largest
+   concessions as bars with a small line per item, Treasury's combined super
+   figures, the eight tax categories, then the full table, the terms and the
+   source. Shared pieces come from style.css (ui-section, ui-bar, ui-card). */
 #prerender:has(+ .tax-content){padding-bottom:var(--space-row)}
 #prerender:has(+ .tax-content)>p:last-child{margin-bottom:0}
-.tax-content{padding-block:var(--space-row);color:var(--ink)}
-.tax-content>p,.tax-content section>p{max-width:76ch}
-.tax-lede{font:var(--type-body);line-height:1.65;margin-top:0}
-.tax-content section{margin-block:var(--space-section)}
-.tax-content h2{font:var(--type-heading);margin-block:var(--space-group)}
-.tax-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:var(--space-group)}
-.tax-item{min-width:0;border-top:var(--border-hairline) solid var(--money-ink);padding-top:var(--space-row)}
-.tax-item h3{font:var(--type-strong);margin:var(--space-row) 0;overflow-wrap:anywhere}
-.tax-amount{font:var(--type-heading);font-variant-numeric:tabular-nums;margin-block:var(--space-row)}
-.tax-receipt,.tax-item details{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere}
-.tax-item summary{cursor:pointer;min-height:2.75rem;display:flex;align-items:center;text-decoration:underline}
-.tax-content :focus-visible{outline:var(--border-hairline) solid var(--bronze-ink);outline-offset:var(--space-tight)}
+.tax-content{padding-block:var(--space-row) var(--space-section);color:var(--ink)}
+.tax-content p{max-width:var(--size-readable)}
+.tax-lede{margin:0;font:var(--type-body);color:var(--ink);text-wrap:pretty}
+.tax-content a{text-decoration-color:var(--bronze-rule);text-underline-offset:.18em;text-decoration-thickness:1px}
+.tax-content :focus-visible{outline:var(--border-focus) solid var(--bronze-ink);outline-offset:3px}
+.tax-jump{display:flex;flex-wrap:wrap;gap:0 var(--space-block);margin:var(--space-block) 0 0;font:var(--type-label)}
+.tax-jump a{display:inline-flex;align-items:center;min-height:var(--size-target);color:var(--ink-soft)}
+.tax-jump a:hover{color:var(--bronze-ink)}
+.tax-section{scroll-margin-top:var(--space-block)}
+.tax-section .ui-section-note{max-width:var(--size-readable)}
+
+/* At a glance: a sentence, then four counts and the largest estimate. */
+.tax-kicker{margin:0 0 var(--space-line);font:var(--type-label);color:var(--money-ink)}
+.tax-summary{margin:0 0 var(--space-block);font:var(--type-body);text-wrap:pretty}
+.tax-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-block) var(--space-group);margin:0 0 var(--space-block)}
+@media(min-width:900px){.tax-stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.tax-stat{display:flex;flex-direction:column;gap:var(--space-line);min-width:0;padding-top:var(--space-row);border-top:var(--border-hairline) solid var(--divider-subtle)}
+.tax-stat dt{font:var(--type-label);color:var(--ink-soft)}
+.tax-stat dd{margin:0}
+.tax-stat-value{font:var(--type-tile-figure);font-variant-numeric:tabular-nums;color:var(--ink)}
+.tax-stat-value a{color:inherit}
+.tax-stat-note{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere}
+
+/* Largest: name, bar, figure, small line; details under the row. */
+.tax-bars{margin:var(--space-heading) 0 0;padding:0;list-style:none;counter-reset:tax}
+.tax-bar-row{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name figure" "bar spark";gap:var(--space-tight) var(--space-block);align-items:center;padding-block:var(--space-row);border-top:var(--border-hairline) solid var(--divider-subtle)}
+@media(min-width:900px){.tax-bar-row{grid-template-columns:minmax(0,5fr) minmax(0,4fr) 5.5rem 7.5rem;grid-template-areas:"name bar figure spark";column-gap:var(--space-group)}}
+.tax-bar-name{grid-area:name;display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-line) var(--space-row);min-width:0}
+.tax-bar-title{flex-basis:100%;font:var(--type-body);color:var(--ink);overflow-wrap:anywhere}
+.tax-bar-meta{font:var(--type-fine);color:var(--ink-soft)}
+.tax-bar-track{grid-area:bar;height:8px}
+.tax-bar-figure{grid-area:figure;align-self:start;font:var(--type-strong);font-variant-numeric:tabular-nums;text-align:end;white-space:nowrap}
+.tax-bar-figure a{color:var(--ink)}
+@media(min-width:900px){.tax-bar-figure{align-self:center}}
+.tax-spark{grid-area:spark;justify-self:end;display:block;width:5.5rem;height:1.75rem;overflow:visible}
+.tax-spark path{fill:none;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+@media(min-width:900px){.tax-spark{width:7.5rem}}
+.tax-spark-past{stroke:var(--chart-mark)}
+.tax-spark-ahead{stroke:var(--chart-mark);stroke-dasharray:3 3;opacity:.75}
+.tax-spark-now{stroke:var(--chart-baseline);stroke-width:1;vector-effect:non-scaling-stroke}
+.tax-details[open]{flex-basis:100%}
+.tax-details{min-width:0;font:var(--type-fine);color:var(--ink-soft)}
+.tax-details summary{display:inline-flex;align-items:center;min-height:1.5rem;cursor:pointer;color:var(--ink-soft);text-decoration:underline;text-decoration-color:var(--bronze-rule);text-underline-offset:.18em}
+.tax-details summary::-webkit-details-marker{display:none}
+.tax-details summary{list-style:none}
+.tax-details dl{display:grid;gap:var(--space-tight);margin:0 0 var(--space-row);max-width:var(--size-readable)}
+.tax-details dt{font:var(--type-label);color:var(--ink)}
+.tax-details dd{margin:0;overflow-wrap:anywhere}
+.tax-more{margin:var(--space-block) 0 0;font:var(--type-label)}
+
+/* Combined super estimates: two cards, figure first. */
+.tax-combined{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:var(--space-group)}
+.tax-combined-card{min-width:0;padding-top:var(--space-row);border-top:var(--border-hairline) solid var(--divider-default)}
+.tax-combined-title{margin:0;font:var(--type-subheading);color:var(--ink)}
+.tax-combined-figure{margin:var(--space-row) 0 0;font:var(--type-tile-figure);font-variant-numeric:tabular-nums}
+.tax-combined-figure a{color:var(--ink)}
+.tax-combined-figure span{font:var(--type-metadata);color:var(--ink-soft)}
+.tax-combined-parts{margin:var(--space-row) 0 0;font:var(--type-metadata);color:var(--ink-soft)}
+
+/* Categories: one card per tax, counts and its three largest items. */
+.tax-cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,19rem),1fr));gap:var(--space-group) var(--space-block);margin:0;padding:0;list-style:none}
+.tax-cat{display:flex;flex-direction:column;min-width:0;padding-top:var(--space-row);border-top:var(--border-hairline) solid var(--divider-default)}
+.tax-cat-name{margin:0;font:var(--type-subheading)}
+.tax-cat-name a{color:var(--ink)}
+.tax-cat-about{margin:var(--space-line) 0 0;font:var(--type-metadata);color:var(--ink-soft)}
+.tax-cat-count{margin:var(--space-row) 0 0;font:var(--type-fine);color:var(--ink-soft)}
+.tax-cat-count strong{font:var(--type-strong);color:var(--ink)}
+.tax-cat-top{margin:var(--space-row) 0 0;padding:0;list-style:none}
+.tax-cat-top li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--space-tight);padding-block:var(--space-line);border-top:var(--border-hairline) solid var(--divider-subtle);font:var(--type-fine);font-variant-numeric:tabular-nums}
+.tax-cat-top span{color:var(--ink-soft);overflow-wrap:anywhere}
+.tax-cat-top a{color:var(--ink);white-space:nowrap}
+
+/* Table shortcuts, then the shared register table. */
+.tax-quick{display:flex;flex-wrap:wrap;align-items:center;gap:0 var(--space-block);margin:0 0 var(--space-block);font:var(--type-label)}
+.tax-quick span{color:var(--ink-soft)}
+.tax-quick a{display:inline-flex;align-items:center;min-height:var(--size-target)}
+
+.tax-terms{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-block) var(--space-section);margin:0}
+@media(min-width:900px){.tax-terms{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tax-terms dt{font:var(--type-strong);color:var(--ink)}
+.tax-terms dd{margin:var(--space-line) 0 0;font:var(--type-metadata);color:var(--ink-soft)}
+.tax-related{margin-top:0}
+
 @media(width < 600px){
   [data-register-table="tax-expenditures-table"] .dt-scroll{overflow-x:visible}
   #tax-expenditures-table{display:block;width:100%;min-width:0}
@@ -21,8 +97,12 @@
   #tax-expenditures-table tbody tr{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:var(--space-tight) var(--space-row);padding:var(--space-block);border-bottom:var(--border-hairline) solid var(--divider-subtle);background:var(--paper-raised)}
   #tax-expenditures-table td{display:block;grid-column:1/-1;position:static;min-width:0;max-width:100%;padding:0;border:0;box-shadow:none;white-space:normal;text-align:start;overflow-wrap:anywhere}
   #tax-expenditures-table td::before{content:attr(data-label);display:block;font:var(--type-fine);color:var(--ink-soft)}
-  #tax-expenditures-table td[data-label="Tax expenditure"]{grid-column:1/-1;font:var(--type-strong)}
+  #tax-expenditures-table td[data-label="Tax expenditure"]{grid-area:1/1;font:var(--type-strong)}
   #tax-expenditures-table td[data-label="Tax expenditure"]::before{display:none}
-  #tax-expenditures-table td[data-label="ID"]{grid-column:1}
-  #tax-expenditures-table td[data-label="Estimate (AUD)"]{grid-column:2;text-align:end;white-space:nowrap;font:var(--type-strong)}
+  #tax-expenditures-table td[data-label="Estimate (AUD)"]{grid-area:1/2;text-align:end;white-space:nowrap;font:var(--type-strong)}
+  #tax-expenditures-table td[data-label="Estimate (AUD)"]::before{display:none}
+  #tax-expenditures-table td:is([data-label="ID"],[data-label="Measure year"]){grid-column:auto}
+}
+@media(forced-colors:active){
+  .tax-spark path{stroke:CanvasText}.tax-bar-track i{background:CanvasText}
 }
