@@ -1,0 +1,202 @@
+{
+ "date": "2026-11-28",
+ "run": "nightly",
+ "status": "failed",
+ "started": "2026-11-27T16:15:42Z",
+ "finished": "2026-11-27T20:17:58Z",
+ "commit": "16f403a70",
+ "deploy": "started by the push (deploy.yml, portal/ changed)",
+ "summary": "1,005,634 resources (+381: speech +340, press_release +17, division +24); divisions: 0 new; federal latest 2026-11-23; bills: 0 new, 0 changed, 0 titles filled, 0 sponsor IDs filled; evidence layers: built 8 Sep 2026; no rebuild scheduled (OPAX_EVIDENCE_MONTHLY is off); Paused sources: bills, committees, grants_fetch, integrity_nsw_icac, integrity_nt_icac, integrity_tas_ic, interests_federal, qld, qld_contracts, releases_treasury, sa",
+ "failures": [
+  "portal tests failed against the new divisions files (green without them, with seovotes kept; red in the first run: test/ask-r3-round2.test.mjs): divisions not published tonight"
+ ],
+ "coverage_alerts": [],
+ "warnings": [
+  "coverage: known, being filled: senate 2014-01-01 to 2019-04-03; lane im/backfill-joint; review by 2027-01-02; Known, being filled: missing Senate historical acquisition. Keep visible without paging while the repair lane reconciles source days.",
+  "coverage: known, being filled: nsw_la 2023-01-01 to 2024-11-21; lane im/backfill-joint; review by 2027-01-23; Known, being filled: NSW Assembly acquisition hole before 22 November 2024. Completion needs the filling lane's sitting-day manifest.",
+  "coverage: known, being filled: nsw_lc 2023-01-01 to 2025-02-10; lane im/backfill-joint; review by 2027-01-23; Known, being filled: NSW Council acquisition hole before 11 February 2025. Completion needs the filling lane's sitting-day manifest.",
+  "coverage: thin days: representatives 90 below 10% of median 44; sample 1901-08-06,1901-10-29,1902-04-25,1903-08-12,1904-03-11,1904-08-17,1904-09-09,1904-09-23,1905-06-28,1905-07-26",
+  "coverage: thin days: senate 79 below 10% of median 31; sample 1901-05-31,1901-08-07,1902-05-09,1903-10-22,1904-03-04,1904-04-13,1904-09-15,1905-06-28,1905-06-29,1905-07-05",
+  "coverage: thin days: nsw_lc 3 below 10% of median 111; sample 2016-05-03,2021-09-14,2022-09-13",
+  "coverage: thin days: sa_ha 3 below 10% of median 260; sample 2020-11-25,2021-07-20,2023-03-26",
+  "coverage: thin days: sa_lc 3 below 10% of median 159; sample 2020-11-25,2022-09-20,2023-03-26",
+  "coverage: thin days: qld_la 1 below 10% of median 275; sample 2024-11-27",
+  "coverage: not held: wa_la; review by 2027-01-31; No WA plenary speech series is held. Review at expiry; this is a corpus boundary, not a non-sitting claim.",
+  "coverage: not held: wa_lc; review by 2027-01-31; No WA plenary speech series is held. Review at expiry; this is a corpus boundary, not a non-sitting claim.",
+  "coverage: not held: tas_ha; review by 2027-01-31; No Tasmanian plenary speech series is held. Review at expiry; this is a corpus boundary, not a non-sitting claim.",
+  "coverage: not held: tas_lc; review by 2027-01-31; No Tasmanian plenary speech series is held. Review at expiry; this is a corpus boundary, not a non-sitting claim.",
+  "coverage: not held: nt_la; review by 2027-01-31; No NT plenary speech series is held. Review at expiry; this is a corpus boundary, not a non-sitting claim.",
+  "coverage: historical federal inventory absent; historical expected dates unknown",
+  "coverage: repair sitting-day manifest absent: im/backfill-joint; expected senate.json",
+  "coverage: repair sitting-day manifest absent: im/backfill-joint; expected nsw.json",
+  "Backfill did not complete: senate_backfill(shared-stop)",
+  "Shared backfill.STOP: NSW repair held; inspect the growth ledger; periodic completion unaffected",
+  "a source refused to change its register tonight (kept the last good rows): frl_instruments",
+  "division export retained 28 pinned records; explicit coverage flags identify degraded source coverage",
+  "SEO recent votes retained 942 published source URLs across 23 divisions: Victorian Hansard asset paths changed; unchanged recorded votes kept their prior citations",
+  "suppliers held by review until 2026-12-07 (scripts/vm/gate_hold.txt): built from the held money graph; put back to HEAD, not published tonight",
+  "Backfill growth guard: senate stage: KB counters unavailable or growth ledger invalid; repair held closed"
+ ],
+ "stale_step_logs": {
+  "senate_backfill": [
+   "ValueError: invalid counters",
+   "parli.ingest.backfill_guard.Stopped: KB counters unavailable or growth ledger invalid; repair held closed"
+  ],
+  "periodic_frl_instruments": [
+   "[frl-instruments] HTTP request 300 (attempt 1)",
+   "[frl-instruments] HTTP request 301 (attempt 1)",
+   "[frl-instruments] 23,093 unique expanded titles / 24,113 listed",
+   "[frl-instruments] HTTP request 302 (attempt 1)",
+   "[frl-instruments] HTTP request 303 (attempt 1)",
+   "[frl-instruments] 23,193 unique expanded titles / 24,113 listed",
+   "[frl-instruments] HTTP request 304 (attempt 1)",
+   "[frl-instruments] 23,293 unique expanded titles / 24,113 listed",
+   "[frl-instruments] HTTP request 305 (attempt 1)",
+   "[frl-instruments] 23,393 unique expanded titles / 24,113 listed",
+   "[frl-instruments] HTTP request 306 (attempt 1)",
+   "[frl-instruments] HTTP request 307 (attempt 1)",
+   "[frl-instruments] 23,493 unique expanded titles / 24,113 listed",
+   "[frl-instruments] HTTP request 308 (attempt 1)",
+   "FRL HELD: Out-of-scope title; snapshot held (id 'F2026L00773', collection 'LegislativeInstrument', isInForce False)"
+  ]
+ },
+ "backfill": {
+  "byte_ceiling": 5500000000,
+  "max_bytes_per_resource": 59280,
+  "minimum_resources": 500,
+  "bytes_added": 0,
+  "resources_added": 0,
+  "cumulative_bytes_added": 0,
+  "cumulative_resources_added": 0,
+  "bytes_remaining": 5500000000,
+  "stopped": true,
+  "stages": {},
+  "warning": "senate stage: KB counters unavailable or growth ledger invalid; repair held closed",
+  "gb_ceiling": 5.5,
+  "gb_added": 0.0,
+  "cumulative_gb_added": 0.0,
+  "gb_remaining": 5.5,
+  "days_remaining": null,
+  "projected_finish_date": null
+ },
+ "backfill_failures": [
+  "senate_backfill(shared-stop)",
+  "Shared backfill.STOP: NSW repair held; inspect the growth ledger; periodic completion unaffected",
+  "growth guard: senate stage: KB counters unavailable or growth ledger invalid; repair held closed"
+ ],
+ "paused_sources": {
+  "committees": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "parlinfo.aph.gov.au",
+   "checked_at": "2026-11-27T16:19:28.841934+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "integrity_nsw_icac": {
+   "status": "paused",
+   "reason": "HTTP 403",
+   "host": "www.icac.nsw.gov.au",
+   "checked_at": "2026-11-26T16:55:46.638109+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "integrity_tas_ic": {
+   "status": "paused",
+   "reason": "HTTP 403",
+   "host": "www.integrity.tas.gov.au",
+   "checked_at": "2026-11-26T17:34:24.562742+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "integrity_nt_icac": {
+   "status": "paused",
+   "reason": "HTTP 403",
+   "host": "icac.nt.gov.au",
+   "checked_at": "2026-11-26T17:34:53.295914+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "qld": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "data.parliament.qld.gov.au",
+   "checked_at": "2026-11-27T16:19:25.151611+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "bills": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "parlinfo.aph.gov.au",
+   "checked_at": "2026-11-27T18:17:19.515400+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "sa": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "hansardsearch.parliament.sa.gov.au",
+   "checked_at": "2026-11-27T16:21:28.562794+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "qld_contracts": {
+   "status": "paused",
+   "reason": "redirect refused: destination robots policy is unavailable",
+   "host": "www.data.qld.gov.au",
+   "checked_at": "2026-11-26T19:03:58.804349+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "releases_treasury": {
+   "status": "paused",
+   "reason": "redirect refused: destination robots policy is unavailable",
+   "host": "ministers.treasury.gov.au",
+   "checked_at": "2026-11-27T16:32:54.675606+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "grants_fetch": {
+   "status": "paused",
+   "reason": "HTTP 403",
+   "host": "www.grants.gov.au",
+   "checked_at": "2026-11-27T16:33:51.987431+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "interests_federal": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "www.aph.gov.au",
+   "checked_at": "2026-11-27T16:46:29.507161+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  }
+ },
+ "periodic_state": {
+  "schema": 1,
+  "observed_through": "2026-11-28",
+  "groups": {
+   "frl": {
+    "pending_since": "2026-11-05",
+    "due": "2026-11-26",
+    "last_success": "2026-10-31",
+    "last_attempt": "2026-11-28",
+    "commit": "cd31ffc8b291e95d170d6be4bdc9909b73363b90"
+   },
+   "monthly": {
+    "pending_since": "2026-11-01",
+    "due": "2026-11-10",
+    "last_success": "2026-10-19",
+    "last_attempt": "2026-11-27",
+    "commit": "77401b801e5f3c05d66414cacc87eb04a70f406f"
+   },
+   "weekly": {
+    "pending_since": "2026-10-25",
+    "due": "2026-11-22",
+    "last_attempt": "2026-11-27"
+   }
+  }
+ }
+}
