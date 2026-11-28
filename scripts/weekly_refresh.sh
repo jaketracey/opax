@@ -104,6 +104,16 @@ if [ "$want_frl" = 1 ]; then
 fi
 
 if [ "$want_weekly" = 1 ]; then
+  # Discover Victorian agency annual reports for review. A pending unrelated
+  # export can retry the weekly group nightly, so space discovery attempts.
+  # Only the previous complete metadata inventory remains on a source failure.
+  if step_selected agency_catalogue_vic &&
+     [ -z "$(find "$PIPE/agency_catalogue_vic.log" -mtime -6 -print 2>/dev/null)" ]; then
+    STEP_TIMEOUT=5m ALLOW_FAIL="${ALLOW_FAIL}agency_catalogue_vic," \
+      run_step agency_catalogue_vic "" "$PY" -m parli.ingest.agency_catalogue vic \
+        --max-pages 8 --out "$PIPE/agency-catalogue-vic.json"
+  fi
+
   # --- loaders ------------------------------------------------------------------------------------------
   # Commonwealth annual reports from the Transparency Portal's public delivery API (parli/ingest/transparency_portal.py):
   # ~75 paced requests into a raw cache outside git, a snapshot with completeness and shrink guards (exit 3 keeps the
