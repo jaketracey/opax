@@ -219,6 +219,16 @@ intake manifest for its robots.txt and catalogue page once, as OPAXBot
 Refused hosts are not tried by any other route; NSW, Qld, WA and NT agency coverage depends
 on maintainer intakes or on each agency's own site answering OPAXBot.
 
+The update box checks Victorian tabled annual-report metadata in the weekly
+group. The collector rolls to the latest finished financial year in July, with
+a maximum of eight catalogue pages and five minutes per attempt. Attempts are
+spaced at least six days apart, including during catch-up. The latest complete
+inventory is `~/.cache/autoresearch/pipeline/agency-catalogue-vic.json`; the
+step log is `agency_catalogue_vic.log` in the same directory. Unavailable or
+inconsistent pages leave the previous file in place. Review rows missing from
+the existing intake against their source and edition before fetching PDFs or
+publishing figures. This step only discovers candidate metadata.
+
 ## Commonwealth latest year against AGOR, 11 November 2026
 
 `agor-reconciliation-2026-11-11.json` compares the AGOR register (Department of Finance,

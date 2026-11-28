@@ -30,6 +30,7 @@ import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 from urllib.parse import urlencode, urlsplit
+from zoneinfo import ZoneInfo
 
 from parli.ingest import agency_reports as ar
 from parli.ingest.integrity import common
@@ -75,27 +76,37 @@ def held_keys():
 
 
 def vic(args):
-    client = common.Client(VIC)
-    hits, page, total = {}, 1, None
+    client = common.Client(VIC, max_requests=args.max_pages + 1)
+    hits, total = {}, None
     try:
-        while page <= args.max_pages:
+        for page in range(1, args.max_pages + 1):
             # The API ignores its sort and date parameters (checked 11 Nov 2026); the document-type filter
             # (49 = annual reports) and the reporting year as a term select the year's papers.
-            url = SEARCH + "?" + urlencode({"page": page, "pageSize": 100, "sortType": 30, "tabled-type": "49", "term": args.year})
+            # The publisher accepts 250 rows. For the current Victorian
+            # cohort this avoids unstable ordering between smaller pages.
+            url = SEARCH + "?" + urlencode({"page": page, "pageSize": 250, "sortType": 30, "tabled-type": "49", "term": args.year})
             body = client.get(url, "html")
             if body is None:
-                break
+                raise common.Held(f"catalogue page {page} unavailable")
             result = json.loads(body).get("result") or {}
-            total = result.get("totalMatching", total)
-            batch = result.get("hits") or []
+            reported_total = result.get("totalMatching")
+            batch = result.get("hits")
+            if type(reported_total) is not int or reported_total < 1 or not isinstance(batch, list) or not batch:
+                raise common.Held(f"catalogue page {page} has no usable inventory")
+            if total is not None and total != reported_total:
+                raise common.Held("catalogue changed during pagination")
+            total = reported_total
             for h in batch:
+                if h["id"] in hits:
+                    raise common.Held(f"duplicate paper across catalogue pages: {h['id']}")
                 hits[h["id"]] = h
-            if not batch or len(hits) >= (total or 0):
+            if len(hits) == total:
                 break
-            page += 1
+        if len(hits) != total:
+            raise common.Held(f"catalogue pagination incomplete: {len(hits)} of {total} hits")
     except common.Held as e:
-        print(f"[agency_catalogue] held: {e}", file=sys.stderr)
-        return 4
+        print(f"[agency_catalogue] held: {e.reason}", file=sys.stderr)
+        return e.code
     held = held_keys()
     rows = []
     for h in hits.values():
@@ -116,13 +127,13 @@ def vic(args):
                      "pdf_urls": [f["path"] for f in files], "pdf_bytes": [int(f.get("size") or 0) for f in files],
                      "held": bool(agency and year and ("VIC", ar.slug(agency), year) in held)})
     rows.sort(key=lambda r: (r["date"], r["paper_id"]), reverse=True)
-    out = ar.DATA / f"catalogue-vic-{args.until}.json"
-    out.write_text(json.dumps({"source": SEARCH, "filter": {"tabled-type": "49 (annual reports)", "term": args.year}, "window": [args.since, args.until], "fetched_at": now(),
+    out = args.out or ar.DATA / f"catalogue-vic-{args.until}.json"
+    common.atomic_json(out, {"source": SEARCH, "filter": {"tabled-type": "49 (annual reports)", "term": args.year}, "window": [args.since, args.until], "fetched_at": now(),
                                "total_matching": total, "hits_read": len(hits), "requests": client.count,
                                "note": f"Papers the database types as annual reports, titled for {args.year}, tabled or released in the window. "
                                        "Not a roster of every reporting body: an agency that tables late or under another title is not here.",
-                               "rows": rows}, ensure_ascii=False, indent=1) + "\n")
-    print(json.dumps({"catalogue": str(out.relative_to(ar.ROOT)), "rows": len(rows), "annual_reports": sum(r["kind"] == "annual_report" for r in rows), "held": sum(r["held"] for r in rows),
+                               "rows": rows}, indent=1)
+    print(json.dumps({"catalogue": str(out), "rows": len(rows), "annual_reports": sum(r["kind"] == "annual_report" for r in rows), "held": sum(r["held"] for r in rows),
                       "without_pdf": sum(not r["pdf_urls"] for r in rows), "requests": client.count}))
     return 0
 
@@ -190,10 +201,11 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     v = sub.add_parser("vic")
-    v.add_argument("--since", default="2026-07-01")
-    v.add_argument("--until", default=date.today().isoformat())
-    v.add_argument("--year", default="2025-26")
+    v.add_argument("--since", type=date.fromisoformat)
+    v.add_argument("--until", type=date.fromisoformat, default=datetime.now(ZoneInfo("Australia/Melbourne")).date())
+    v.add_argument("--year")
     v.add_argument("--max-pages", type=int, default=12)
+    v.add_argument("--out", type=Path, help="Write the complete metadata inventory here")
     sub.add_parser("probe")
     f = sub.add_parser("fetch")
     f.add_argument("--catalogue", required=True)
@@ -203,6 +215,17 @@ def main(argv=None):
     f.add_argument("--batch", default="vic-tabled")
     f.add_argument("--out", required=True)
     args = ap.parse_args(argv)
+    if args.cmd == "vic":
+        if args.max_pages < 1:
+            ap.error("--max-pages must be positive")
+        end_year = args.until.year - (args.until.month < 7)
+        args.year = args.year or f"{end_year - 1}-{end_year % 100:02d}"
+        if not re.fullmatch(r"20\d{2}-\d{2}", args.year) or (int(args.year[:4]) + 1) % 100 != int(args.year[5:]):
+            ap.error("--year must be a reporting year such as 2025-26")
+        args.since = args.since or date(int(args.year[:4]) + 1, 7, 1)
+        if args.since > args.until:
+            ap.error("--since must be on or before --until")
+        args.since, args.until = args.since.isoformat(), args.until.isoformat()
     return {"vic": vic, "probe": probe, "fetch": fetch}[args.cmd](args)
 
 
