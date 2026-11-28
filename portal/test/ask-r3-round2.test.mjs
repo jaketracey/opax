@@ -99,10 +99,16 @@ for (const [id, month, total] of [['DT-MNTH-005', '2021-11', 17], ['DT-MNTH-008'
 });
 
 test('DT-SINC-008: a grouped count also supplies its exact whole-selection total', async () => {
-  const data = await api.callTool({ asset, origin: 'https://opax.test' }, 'count_records', { record_type: 'divisions', chamber: 'representatives', since: '2025-01-01', group_by: 'month' });
-  assert.equal(data.total, 310);
+  const since = '2025-01-01';
+  const { divisions } = await asset('/divisions/index.json');
+  // This question has no end date. Reconcile against the index under test so
+  // new sittings don't make the previous research snapshot a release gate.
+  const expected = divisions.filter(({ key, date }) => key.startsWith('federal-representatives-') && date >= since).length;
+  assert.ok(expected > 0, 'the House division cohort must be present');
+  const data = await api.callTool({ asset, origin: 'https://opax.test' }, 'count_records', { record_type: 'divisions', chamber: 'representatives', since, group_by: 'month' });
+  assert.equal(data.total, expected);
   assert.equal(data.rows.reduce((n, r) => n + r.count, 0), data.total);
-  assert.match(rendered('DT-SINC-008', sourcesFor(data.citations)), /^310 recorded divisions in the House of Representatives since 2025-01-01/);
+  assert.ok(rendered('DT-SINC-008', sourcesFor(data.citations)).startsWith(`${expected} recorded divisions in the House of Representatives since ${since}`));
 });
 
 test('DT-YEAR-014: a period outside the observed bill index cannot become a zero or answer a debate question', async () => {
